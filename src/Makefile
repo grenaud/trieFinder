@@ -1,0 +1,21 @@
+all:	searchtags trieTag	fastaReader.o	trie.o allTag
+
+trie.o:
+	g++ -lm -O3 -c trie.cpp
+
+fastaReader.o:
+	g++ -lm -O3 -c fastaReader.cpp
+
+trieTag:	fastaReader.o	trie.o
+	g++  -lm -O3 -g -o trieTag trieTag.cpp fastaReader.o trie.o
+
+allTag:	fastaReader.o	trie.o
+	g++  -lm -O3 -g -o allTag allTag.cpp fastaReader.o trie.o
+
+searchtags:	fastaReader.o	trie.o
+	g++  -lm -O3 -g -o searchtags searchtags.cpp fastaReader.o trie.o
+
+
+clean:
+	rm -f  trieTag allTag searchtags	fastaReader.o	trie.o
+
