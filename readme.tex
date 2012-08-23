@@ -1,0 +1,80 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[dvips]{graphicx,epsfig}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage[boxed]{algorithm2e}
+\usepackage{color}
+ 
+\setlength\parindent{0pt}
+
+\begin{document}
+
+
+\title{TrieFinder}
+\author{Gabriel Renaud \\ \footnotesize{ Max Planck Institute for Evolutionary Anthropology} \\ \footnotesize{gabriel.reno [ at sign ] gmail.com}}
+\date{\today}
+\maketitle
+
+\tableofcontents
+
+\section{Description}
+Triefinder is a software to build an index of all the tags of a certain restriction enzyme site in Refseq, Unigene and Genomic databases and query a fastq of sequenced tags to assign them to known tags in the index.
+
+\section{Installation}
+
+\subsection{Building the binaries}
+
+Make sure the main script and worker scripts are executable:
+\small{
+\begin{verbatim}
+chmod u+x mainScript.pl
+chmod u+x src/mergeAnnotation.pl
+chmod u+x src/readFiles.pl
+\end{verbatim}
+}
+
+Build the C++ binaries:
+
+cd src/
+make
+
+
+\subsection{Setting up the databases}
+Download the databases:
+
+\begin{itemize}
+\item Download the RefSeq for Zebrafish.
+for example we used 
+\small{
+\begin{verbatim}
+wget ftp://ftp.ncbi.nih.gov/refseq/D_rerio/mRNA_Prot/zebrafish.rna.fna.gz
+\end{verbatim}
+}
+\item Download the Unigene for Zebrafish
+for example we used 
+\small{
+\begin{verbatim}
+wget ftp://ftp.ncbi.nih.gov/repository/UniGene/Danio_rerio/Dr.seq.all.gz
+\end{verbatim}
+}
+
+\item Download the Genome for Zebrafish
+
+\item Concatenate all the genomic sequences for the Zebrafish chromsomes (genomic database) into a single file.
+\end{itemize}
+
+\section{Running the software}
+
+
+Type:
+\small{
+\begin{verbatim}
+./mainScript.pl
+\end{verbatim}
+}
+
+for a list of the available options.
+
+
+\end{document}
