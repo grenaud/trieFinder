@@ -3,7 +3,7 @@
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{amssymb}
-\usepackage[boxed]{algorithm2e}
+%\usepackage[boxed]{algorithm2e}
 \usepackage{color}
  
 %\usepackage{listings}
@@ -41,7 +41,7 @@ Output format  & custom tab delimited (see section \ref{sec:outformat}) \\
 \end{tabular}
 \\
 
-trieFinder is a software for the automatic alignment of tags stemming from Massively Parallel Signature Sequencing (MPSS) to preannotated databases of putative sequence tags from both the genome and transcriptome ( Refseq and Unigene ). Thus, the laborious process of aligning the tags and parsing the results to create a final summary for each tag is obviated. The core elements of trieFinder are written in C++ with high order scripts in Perl. Although the software was originaly written to deal with Zebrafish data, it can be easily accomodated for other species.  \\
+trieFinder is a software suite for the automatic alignment of tags stemming from Massively Parallel Signature Sequencing (MPSS) to preannotated databases of putative sequence tags from both the genome and transcriptome ( Refseq and Unigene ). Thus, the laborious process of aligning the tags and parsing the results to create a final summary for each tag is obviated. The core elements of trieFinder are written in C++ with wrapper scripts in Perl. Although the software was originally written to deal with Zebrafish data, it can be easily accomodated for other species.  \\
 
 Our approach relies on prefix trees built on the database which has the advantage of assuring correct results even if the sequence is shorter than the one stored in the database. Therefore, the user does not have to rebuild the database for each iteration. \\
 
