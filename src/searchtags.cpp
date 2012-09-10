@@ -12,9 +12,11 @@
 
 using namespace std;
 
+int lengthTagDatabase=76;
+
 typedef struct{
     unsigned int idseq;
-    int coord;
+    unsigned int coord;
     char strand;
 } singlematch;
 
@@ -52,11 +54,13 @@ matchtodb parseMatch(string toparse){
     return toreturn;
 }
 
-string convertInt(int number){
+inline string convertInt(int number){
     stringstream ss;
     ss << number;
     return ss.str();
 }
+
+
 
 string returnFirstToken(string * toparse,string delim){
     size_t found;
@@ -101,7 +105,7 @@ int progress_func(int current,
     fflush(stdout);
 }
 
-string joinlist(list<string> tocat){
+inline string joinlist(list<string> tocat){
     if(tocat.size() == 0)
 	return "";
     if(tocat.size() == 1)
@@ -121,6 +125,20 @@ string joinlist(list<string> tocat){
 	printed++;
     }
     return toreturn;    
+}
+
+
+inline unsigned int computeCorrectCoord(singlematch & sm,unsigned int tagLengthFound){
+    if(sm.strand == '+'){
+	return sm.coord; //no modificati
+    }else{
+	if(sm.strand == '-'){
+	    return (sm.coord +  (lengthTagDatabase-tagLengthFound));
+	}else{
+	    cerr<<endl<<"Wrong strand for record "<<sm.idseq <<" contact developers"<<endl;
+	    exit(1);
+	}
+    }
 }
 
 
@@ -291,9 +309,14 @@ int main(int argc, char *argv[]){
 
 	if(firstLine){
 	    trieOftagSeqs=new Trie<allmatches>( tag.c_str() ,*myCurrentMatch );
+	    lengthTagDatabase=tag.size();
 	    firstLine=false;
 	}else{
-	    trieOftagSeqs->insert(tag.c_str() ,*myCurrentMatch );
+	    if(lengthTagDatabase != tag.size() ){
+		cerr<<"Length of the tag "<<tag.size()<<" for sequence "<<tag<<" is different from the one previously found="<<lengthTagDatabase<<endl;
+		return 1;
+	    }
+	    trieOftagSeqs->insert(tag.c_str() ,*myCurrentMatch );	    
 	}
 	lineCounterdb++;
     }
@@ -320,15 +343,25 @@ int main(int argc, char *argv[]){
     }
     unsigned int lineCounter=0;
     string defline;
-
+    
     while( getline(fInput, line) ){
 	// cout<<"line"<<endl;
-	if(lineCounter %4 == 0)
+	if(lineCounter %4 == 0){
 	    defline=line;
+	    if(defline[0] != '@'){
+		cerr<<endl<<"Expected a '@' sign for defline  "<<line<<" please make sure your input is fastq, without blank lines"<<endl;
+		exit(1);	
+	    }
+	}
+
 	if(lineCounter %4 == 1){
 	    // string mysequencetosearch="GATCCAGACGGTCGTACATTTTCAAAAGATGTCTAAAACTGCCACAAACCTCGGGAGAA";
 	    string mysequencetosearch=line;
 	    // cout<<"mysequencetosearch "<<mysequencetosearch<<endl;
+	    if(mysequencetosearch.size() > lengthTagDatabase){
+		cerr<<"Sequence "<<defline<<" with sequence "<<mysequencetosearch<<" is greater than length of the database"<<endl;
+		return 1;
+	    }
 	    //vector< matches<allmatches> >  * vectorOfDeflines=trieOftagSeqs->searchForWordMismatch((mysequencetosearch.substr(4,mysequencetosearch.length()-4)).c_str(),numberOfMismatches);
 	    vector< matches<allmatches> >  * vectorOfDeflines=trieOftagSeqs->searchForWordMismatch(mysequencetosearch.c_str(),numberOfMismatches);
 	    // "GATCAGATTAGCAT",0);
@@ -350,12 +383,15 @@ int main(int argc, char *argv[]){
 		     iter++){
 		    for(int j=0;j<iter->refseq->size();j++){
 			if( (*vectorOfDeflines)[i].numberOfMismatches == 0){
-			    refseqP.push_back(((id2refseq[(*(iter->refseq))[j].idseq ]+":")+
-					       (convertInt((*(iter->refseq))[j].coord)+":"))+
-					      (*(iter->refseq))[j].strand);
+			    refseqP.push_back( ( (id2refseq[(*(iter->refseq))[j].idseq ]+":")+
+						 (convertInt(computeCorrectCoord((*(iter->refseq))[j],
+										 mysequencetosearch.size()))+":")) +
+						 (*(iter->refseq))[j].strand);
 			}else{
 			    refseqM.push_back(((id2refseq[ (*(iter->refseq))[j].idseq ]+":")+
-					       (convertInt((*(iter->refseq))[j].coord)+":"))+
+					       //(convertInt((*(iter->refseq))[j].coord)+":"))+
+					       (convertInt(computeCorrectCoord((*(iter->refseq))[j],
+									       mysequencetosearch.size()))+":")) +
 					      (*(iter->refseq))[j].strand);
 			}
 			// cout<<id2refseq[ (*(iter->refseq))[j].idseq ]<<"\t";
@@ -366,11 +402,16 @@ int main(int argc, char *argv[]){
 		    for(int j=0;j<iter->unigene->size();j++){
 			if( (*vectorOfDeflines)[i].numberOfMismatches == 0){
 			    unigeneP.push_back(((id2unigene[ (*(iter->unigene))[j].idseq ]+":")+
-						(convertInt((*(iter->unigene))[j].coord)+":"))+
+						//(convertInt((*(iter->unigene))[j].coord)+":"))+
+						(convertInt(computeCorrectCoord((*(iter->unigene))[j],
+										mysequencetosearch.size()))+":")) +
 					       (*(iter->unigene))[j].strand);
 			}else{
 			    unigeneM.push_back(((id2unigene[ (*(iter->unigene))[j].idseq ]+":")+
-						(convertInt((*(iter->unigene))[j].coord)+":"))+
+						//(convertInt((*(iter->unigene))[j].coord)+":"))+
+						(convertInt(computeCorrectCoord((*(iter->unigene))[j],
+										mysequencetosearch.size()))+":")) +
+
 					       (*(iter->unigene))[j].strand);
 			}
 			// cout<<id2unigene[ (*(iter->unigene))[j].idseq ]<<"\t";
@@ -380,22 +421,21 @@ int main(int argc, char *argv[]){
 		    for(int j=0;j<iter->genome->size();j++){
 			if( (*vectorOfDeflines)[i].numberOfMismatches == 0){
 			    genomeP.push_back(((id2genome[ (*(iter->genome))[j].idseq ]+":")+
-					       (convertInt((*(iter->genome))[j].coord)+":"))+
+					       //(convertInt((*(iter->genome))[j].coord)+":"))+
+					       (convertInt(computeCorrectCoord((*(iter->genome))[j],
+									       mysequencetosearch.size()))+":")) +
 					      (*(iter->genome))[j].strand);
 			}else{
 			    genomeM.push_back(((id2genome[ (*(iter->genome))[j].idseq ]+":")+
-					       (convertInt((*(iter->genome))[j].coord)+":"))+
+					       //(convertInt((*(iter->genome))[j].coord)+":"))+
+					       (convertInt(computeCorrectCoord((*(iter->genome))[j],
+									       mysequencetosearch.size()))+":")) +
 					      (*(iter->genome))[j].strand);
 			}
-			// cout<<id2genome[ (*(iter->genome))[j].idseq ]<<"\t";
-			// cout<<(*(iter->genome))[j].coord<<"\t";
-			// cout<<(*(iter->genome))[j].strand<<endl;
 		    }
 
 
 		}
-		// cout<<(*vectorOfDeflines)[i].listOfDeflinesOfMatches->size()<<endl;
-		// cout<<"mm "<<<<endl;
 	    }
 
 	    cout<<defline<<"\t"<<

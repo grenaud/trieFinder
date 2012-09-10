@@ -75,7 +75,7 @@ sub systemBash {
  my $cmd = shift;
  my @args = ( "bash", "-c", $cmd );
 
- warn "running ".$cmd."\n";
+ warn "\nrunning ".$cmd."\n";
  if(!$fakeRun){
    my $pid=fork();
    if($pid == 0){
@@ -92,7 +92,7 @@ sub systemBash {
 
 my $maxNumberOfLines=15000000;
 
-my $length=75;
+my $length=76;
 my $mismatchesRestSize=1;
 my $restSequence  = "none";
 my $outdir        = "none";
@@ -153,7 +153,7 @@ if($#ARGV == -1 || ($#ARGV==0 && ($ARGV[0] eq "-h" || $ARGV[0] eq "--help" ))){
   die $usage;
 }
 
-getopts('l:n:r:o:s:u:g:m:i:fd', \%opts);
+getopts('l:r:o:s:u:g:m:i:fd', \%opts);
 
 if(exists $opts{'d'}){
   $onlyCreateDatabase=1;
@@ -230,7 +230,7 @@ if(exists $opts{'o'}){
 
 if(exists $opts{'l'}){
   $length=$opts{'l'};
-  if($length != /^\d+$/){
+  if($length !~ /^\d+$/){
     die "-l parameter must be numerical";
   }
 }else{
@@ -252,8 +252,9 @@ if(exists $opts{'m'}){
   }
 
   $allowedMismatches=$opts{'m'};
-  if($allowedMismatches != /^\d+$/){
-    die "-n parameter must be numerical";
+  print "allowedMismatches $allowedMismatches\n";
+  if($allowedMismatches !~ /^\d+$/){
+    die "-m parameter must be numerical";
   }
 }else{
 
@@ -434,32 +435,43 @@ if ( (-e $outdir."all".".".$restSequence.".l".$length.".db.0") ){
   my $lineNumber=0;
 
   my $dbIndex=0;
-  open(FILEOUT,">".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex) or die "Cannot open ".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex." for writing\n";
-  warn "Writing to ".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex."\n";
 
-  foreach my $file ($outdir."all.".$restSequence.".l".$length.".mm0.out",
-		    $outdir."all.".$restSequence.".l".$length.".mm1.outA",
-		    $outdir."all.".$restSequence.".l".$length.".mm1.outC",
-		    $outdir."all.".$restSequence.".l".$length.".mm1.outG",
-		    $outdir."all.".$restSequence.".l".$length.".mm1.outT") {
-    open(FILE,$file) or die "Cannot open ".$file."\n";
-    while ($line =<FILE>) {
-      print FILEOUT $line;
-      $lineNumber++;
-      if ($lineNumber == 15000000) {
-	$lineNumber=0;
-	$dbIndex++;
-	$lastDbIndex=$dbIndex;
-	open(FILEOUT,">".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex) or die "Cannot open ".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex." for writing\n";
-	warn "Writing to ".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex."\n";
+  my @arrayOfFilesToCombine = ($outdir."all.".$restSequence.".l".$length.".mm0.out",
+			       $outdir."all.".$restSequence.".l".$length.".mm1.outA",
+			       $outdir."all.".$restSequence.".l".$length.".mm1.outC",
+			       $outdir."all.".$restSequence.".l".$length.".mm1.outG",
+			       $outdir."all.".$restSequence.".l".$length.".mm1.outT");
+  if (!$fakeRun) {
+
+    open(FILEOUT,">".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex) or die "Cannot open ".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex." for writing\n";
+    warn "Writing to ".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex."\n";
+
+    foreach my $file (@arrayOfFilesToCombine) {
+      open(FILE,$file) or die "Cannot open ".$file."\n";
+      while ($line =<FILE>) {
+	print FILEOUT $line;
+	$lineNumber++;
+	if ($lineNumber == 15000000) {
+	  $lineNumber=0;
+	  $dbIndex++;
+	  $lastDbIndex=$dbIndex;
+	  open(FILEOUT,">".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex) or die "Cannot open ".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex." for writing\n";
+	  warn "Writing to ".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex."\n";
+	}
       }
+      close(FILE);
+      #print $file."\n";
     }
-    close(FILE);
-    #print $file."\n";
+
+    close(FILEOUT);
+  }else{
+    warn "Combining files :\n";
+    foreach my $file (@arrayOfFilesToCombine) {
+      warn $file."\n";
+    }
+    warn "into ".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex."\n";
+    $lastDbIndex=1;
   }
-
-  close(FILEOUT);
-
 }
 
 
