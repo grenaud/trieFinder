@@ -34,7 +34,7 @@ Input data &  MPSS sequence tags (with a common prefix) \\
 Use & align the input, annotate the results \\
  & and parse them automatically \\
 Language & C++ core functions and Perl wrapper scripts \\
-Input format for sequence tags & fastq \\
+Input format for sequence tags & fastq or unaligned BAM (see below) \\
 Input format for databases & fasta \\
 Output format  & custom tab delimited (see section \ref{sec:outformat}) \\
 \hline
@@ -147,7 +147,14 @@ To run the software type:
 
 This will give you a list of options. The first time the software is executed, it needs to be the formatted databases for the search. On subsequent searches, if the same directory where the database files are stored are specified, it will merely use the existing files. Be sure to delete these files if the database you have build is older than 1 year and download the databases from scratch. If you only wish to build the databases, use the ``-d'' option. 
 
-The output will be created by adding the ``.out'' extention to the input fastq file containing the tags. If you do not have write permissions in the directory where the input file is store, you can merely create a symbolic link.
+The output will be created by adding the ``.out'' extention to the input fastq file containing the tags which is specified using the ``-i'' option. If you have an unmapped BAM file, you can use this custom version of samtools (https://github.com/udo-stenzel/samtools-patched) which can produce fastq as output. You can use the output of samtools-patched by specifying the input as such:
+\small{
+\begin{verbatim}
+samtools view -Y input.bam > input.fq
+\end{verbatim}
+}
+
+If you do not have write permissions in the directory where the input file is store, you can simply create a symbolic link. 
 
 Here is an example of use:
 
@@ -155,7 +162,7 @@ Here is an example of use:
 \begin{verbatim}
 ./mainScript.pl -r GATC -o /home/user/project/zebrafish/db/ 
 -s /mnt/db/zebrafish.rna.fna -u /mnt/db/Dr.seq.all 
--g /mnt/db/whole_genome.fa -i /home/user/project/zebrafish/tags.fa
+-g /mnt/db/whole_genome.fa -i /home/user/project/zebrafish/tags.fq
 \end{verbatim}
 }
 
@@ -172,11 +179,11 @@ Using the following raw fasta files for RefSeq, Unigene and the full zebrafish g
 \end{verbatim}
 and will read the following fastq file as input:
 \begin{verbatim}
-/home/user/project/zebrafish/tags.fa
+/home/user/project/zebrafish/tags.fq
 \end{verbatim}
 The output will be produced as :
 \begin{verbatim}
-/home/user/project/zebrafish/tags.fa.out
+/home/user/project/zebrafish/tags.fq.out
 \end{verbatim}
 
  
