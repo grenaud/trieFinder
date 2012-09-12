@@ -98,7 +98,7 @@ if the following files are present, the build was succesful:
 \small{
 \begin{verbatim}
 src/allTag
-src/trieTag
+src/searchtags
 \end{verbatim}
 }
 
@@ -146,6 +146,8 @@ To run the software type:
 }
 
 This will give you a list of options. The first time the software is executed, it needs to be the formatted databases for the search. On subsequent searches, if the same directory where the database files are stored are specified, it will merely use the existing files. Be sure to delete these files if the database you have build is older than 1 year and download the databases from scratch. If you only wish to build the databases, use the ``-d'' option. 
+
+You can use tags against a database that was build for longer tags (e.g. input has 35bp against a database of 76bp) but please note that this may induce false negatives due to tags occuring at the very end of a reference sequence that were too short for inclusion in the database. Although this should not have any significant impact on overall results, it can be easily solved by rebuilding the database for the length of the tags in the input.
 
 The output will be created by adding the ``.out'' extention to the input fastq file containing the tags which is specified using the ``-i'' option. If you have an unmapped BAM file, you can use this custom version of samtools (https://github.com/udo-stenzel/samtools-patched) which can produce fastq as output. You can use the output of samtools-patched by specifying the input as such:
 \small{
@@ -217,5 +219,13 @@ Column \# & Content \\
 \\
 $^1$ : By default, the program will only report at most 10 matches. The number of original matches will be report in round brackets in the next column. \\
 $^2$ : Degenerate in this context means matches with 1 or more mismatches.
+
+A match has the following format: 
+\begin{verbatim}
+id of reference match[:]position (0-based):strand
+\end{verbatim}
+
+Each match is delimited by three commas (`,,,`). 
+
 
 \end{document}
