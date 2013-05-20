@@ -5,6 +5,8 @@
 #include "string.h"
 #include "stdlib.h"
 #include "math.h"
+#include <gzstream.h>
+#include <fstream>
 
 
 
@@ -444,11 +446,18 @@ int main(int argc, char *argv[]){
 
     }
 
-    ofstream fhPerfect;
-    ofstream fhMismatchA;
-    ofstream fhMismatchC;
-    ofstream fhMismatchG;
-    ofstream fhMismatchT;
+    ogzstream fhPerfect;
+    ogzstream fhMismatchA;
+    ogzstream fhMismatchC;
+    ogzstream fhMismatchG;
+    ogzstream fhMismatchT;
+
+    if( argc < 2 ||  strlen(databaseFileName) < 2 || strcmp(argv[1],"-h") == 0){
+	cout<<"This program will built a list of all the tags found in a genome file (fasta) beginning with a restriction enzyme sequence.\nUsage:"<<endl;
+	cout<<"./allTag -l [size tag] -m [number of mismatches] -r [restriction sequence] -d [database file] -o [output file for perfect matches] -p [output file for matches with mismatches]"<<endl;
+	cout<<endl<<endl;
+	return 1;
+    }
 
     fhPerfect.open (filePerfect);
     if (!fhPerfect.is_open()){
@@ -483,12 +492,6 @@ int main(int argc, char *argv[]){
 
 
 
-    if( argc < 2 ||  strlen(databaseFileName) < 2 || strcmp(argv[1],"-h") == 0){
-	cout<<"Usage:"<<endl;
-	cout<<"./allTag -l [size tag] -m [number of mismatches] -r [restriction sequence] -d [database file] -o [output file for perfect matches] -p [output file for matches with mismatches]"<<endl;
-	cout<<endl<<endl;
-	return 1;
-    }
 
     if(SIZE_RESTRICTION_SITE < 0 ){
 	cout<<"Please enter a positive integer for the the [size rest. site]"<<endl;

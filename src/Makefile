@@ -10,7 +10,7 @@ fastaReader.o:
 #	g++  -lm -O3 -g -o trieTag trieTag.cpp fastaReader.o trie.o
 
 allTag:	fastaReader.o	trie.o
-	g++  -lm -O3 -g -o allTag allTag.cpp fastaReader.o trie.o
+	g++  -lm -O3 -Igzstream/ -g -o allTag allTag.cpp fastaReader.o trie.o gzstream/gzstream.o -lz
 
 searchtags:	fastaReader.o	trie.o
 	g++  -lm -O3 -g -o searchtags searchtags.cpp fastaReader.o trie.o
