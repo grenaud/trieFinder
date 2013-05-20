@@ -53,6 +53,7 @@ trieFinder needs:
 \begin{itemize}
 \item Perl installed
 \item a C++ compiler
+\item zlib installed
 \item The genome and transcriptome (see section \ref{sec:database})
 \item Adequate disk space to store the resulting indices
 \item Sufficient RAM to store the indices into memory (10-20G should suffice)
@@ -90,6 +91,9 @@ Build the C++ binaries:
 \small{
 \begin{verbatim}
 cd src/
+cd gzstream/
+make 
+cd ..
 make
 \end{verbatim}
 }
