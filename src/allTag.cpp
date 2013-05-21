@@ -460,31 +460,31 @@ int main(int argc, char *argv[]){
     }
 
     fhPerfect.open (filePerfect);
-    if (!fhPerfect.is_open()){
+    if (!fhPerfect.good()){
 	cout << "Unable to open file perfect matches = "<< filePerfect<<endl;
 	return 1;
     }
 
     fhMismatchA.open (fileMismatchA);
-    if (!fhMismatchA.is_open()){
+    if (!fhMismatchA.good()){
 	cout << "Unable to open file with mismatches = "<< fileMismatchA<<endl;
 	return 1;
     }
 
     fhMismatchC.open (fileMismatchC);
-    if (!fhMismatchC.is_open()){
+    if (!fhMismatchC.good()){
 	cout << "Unable to open file with mismatches = "<< fileMismatchC<<endl;
 	return 1;
     }
     
     fhMismatchG.open (fileMismatchG);
-    if (!fhMismatchG.is_open()){
+    if (!fhMismatchG.good()){
 	cout << "Unable to open file with mismatches = "<< fileMismatchG<<endl;
 	return 1;
     }
     
     fhMismatchT.open (fileMismatchT);
-    if (!fhMismatchT.is_open()){
+    if (!fhMismatchT.good()){
 	cout << "Unable to open file with mismatches = "<< fileMismatchT<<endl;
 	return 1;
     }

@@ -1,21 +1,28 @@
-all:	searchtags 	fastaReader.o	trie.o allTag #trieTag
+CXXFLAGS =   -lm -O3 -lz  -Igzstream/  -c
+CXX      = g++ #-g -pg
+LDFLAGS  = -lz
 
-trie.o:
-	g++ -lm -O3 -c trie.cpp
 
-fastaReader.o:
-	g++ -lm -O3 -c fastaReader.cpp
+all:	searchtags  allTag #trieTag
+
+
+%.o: %.cpp
+	${CXX} ${CXXFLAGS} $^ -o $@
+
+
 
 #trieTag:	fastaReader.o	trie.o
 #	g++  -lm -O3 -g -o trieTag trieTag.cpp fastaReader.o trie.o
 
-allTag:	fastaReader.o	trie.o
-	g++  -lm -O3 -Igzstream/ -g -o allTag allTag.cpp fastaReader.o trie.o gzstream/gzstream.o -lz
 
-searchtags:	fastaReader.o	trie.o
-	g++  -lm -O3 -g -o searchtags searchtags.cpp fastaReader.o trie.o
 
+
+allTag:	fastaReader.o	trie.o allTag.o gzstream/gzstream.o
+	${CXX} -o $@ $^ $(LDLIBS) $(LDFLAGS)
+
+searchtags:	fastaReader.o	trie.o searchtags.o
+	${CXX} -o $@ $^ $(LDLIBS) $(LDFLAGS)
 
 clean:
-	rm -f  trieTag allTag searchtags	fastaReader.o	trie.o
+	rm -f  trieTag allTag searchtags *.o
 
