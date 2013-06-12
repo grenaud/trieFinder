@@ -7,7 +7,7 @@ all:	searchtags  allTag #trieTag
 
 
 %.o: %.cpp
-	${CXX} ${CXXFLAGS} $^ -o $@
+	${CXX} -Wall ${CXXFLAGS} $^ -o $@
 
 
 
@@ -18,7 +18,7 @@ all:	searchtags  allTag #trieTag
 
 
 allTag:	fastaReader.o	trie.o allTag.o gzstream/gzstream.o
-	${CXX} -o $@ $^ $(LDLIBS) $(LDFLAGS)
+	${CXX}  -o $@ $^ $(LDLIBS) $(LDFLAGS)
 
 searchtags:	fastaReader.o	trie.o searchtags.o
 	${CXX} -o $@ $^ $(LDLIBS) $(LDFLAGS)

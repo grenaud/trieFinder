@@ -1,6 +1,8 @@
 #include <algorithm>
 #include <vector>
 #include <iostream>
+#include <climits>
+
 #include "stdio.h"
 #include "string.h"
 #include "stdlib.h"
@@ -25,9 +27,9 @@
 
 //#define WITH_COMMENTS
 
-// #define	DEBUG_EACH_WORD
+//#define	DEBUG_EACH_WORD
 // #define	DEBUG_TRIE
-// #define	DEBUG_KEEP_ON_DISK
+//#define	DEBUG_KEEP_ON_DISK
 
 #define	ALLOW_EMPTY_LINES true
 
@@ -245,12 +247,14 @@ inline char dnaComplement(char bp){
  * \param [lengthOfString]  Number of characters in the string to reverse
  * \return A pointer to a string (on the heap) containing the reverse complement of [stringToReverse] of length [lengthOfString]
  */
-char * computeReverseComplement(const char * stringToReverse,int lengthOfString){
+char * computeReverseComplement(const char * stringToReverse,int offset,int lengthOfString){
     int i;
     //char * stringToReturn=(char *)malloc(sizeof(char)*(lengthOfString+1));
     char * stringToReturn=new char [lengthOfString+1];
     for(i=(lengthOfString-1);i>=0;i--){
-	stringToReturn[ (lengthOfString-1)-i  ] = dnaComplement(stringToReverse[i]);
+	// cout<<stringToReverse[offset+i]<<endl;
+	// cout<<(offset+i)<<endl;
+	stringToReturn[ (lengthOfString-1)-i  ] = dnaComplement(stringToReverse[offset+i]);
     }
     stringToReturn[ lengthOfString ]='\0';
     return stringToReturn;
@@ -264,12 +268,12 @@ char * computeReverseComplement(const char * stringToReverse,int lengthOfString)
  * \param [stringToPrint]  A pointer to the string to print
  * \param [lengthOfString] Number of characters to print
  */
-inline void printNChar(char * stringToPrint,int lengthOfString){
+inline void printNChar(ostream & outstream,char * stringToPrint,int lengthOfString){
     int i;
     char * pointStr=stringToPrint;
 
     for(i=0;i<lengthOfString;i++){
-	cout<<*(pointStr++);
+	outstream<<*(pointStr++);
     }
 }
 
@@ -280,7 +284,147 @@ inline void printNChar(char * stringToPrint,int lengthOfString){
 
 
 
+inline void processLines(char * seqbuffer, 
+			 unsigned int positionInBuffer,
+			 int SIZE_TAGSIZE,
+			 int SIZE_RESTRICTION_SITE,  
+			 char * restrictionSiteSequence,
+			 string & deflineInput,
+			 ogzstream & fhPerfect,
+			 ogzstream & fhMismatchA,
+			 ogzstream & fhMismatchC,
+			 ogzstream & fhMismatchG,
+			 ogzstream & fhMismatchT){
+    int    returnCodeByMatchingFunction;
 
+    for(unsigned int j=0;
+	j<=(positionInBuffer-SIZE_RESTRICTION_SITE);
+	j++){		
+	returnCodeByMatchingFunction=matchString(restrictionSiteSequence, 
+						 SIZE_RESTRICTION_SITE,
+						 seqbuffer,
+						 j,
+						 NUMBER_OF_MISMATCHES);
+	if(returnCodeByMatchingFunction != -1 ){			
+#ifdef DEBUG_EACH_WORD
+	    cout<<seqbuffer[j]<<seqbuffer[j+1]<<seqbuffer[j+2]<<seqbuffer[j+3]<<endl;
+#endif
+	    //printing forward strand
+	    if( j<=(positionInBuffer-SIZE_TAGSIZE) ){
+		// cout<<"forward\t"<<returnCodeByMatchingFunction<<endl;
+
+		if(returnCodeByMatchingFunction == 0){
+		    fhPerfect<<deflineInput<<"\t";
+		    fhPerfect<<( j  )<<"\t";
+		    printNChar(fhPerfect,seqbuffer+j,SIZE_TAGSIZE);
+		    // cout<<endl;
+		    // printNChar(cout,seqbuffer+j,SIZE_TAGSIZE);
+		    // cout<<endl;
+		    //				    fhPerfect<<computeReverseComplement(seqbuffer,(j-SIZE_TAGSIZE),SIZE_TAGSIZE)<<"\t";
+		    fhPerfect<<"\t+"<<endl;
+		    // break;
+		}else{
+				    
+				    
+		    // cout<<"test"<<endl;
+		    // printNChar(cout,seqbuffer+j,SIZE_TAGSIZE);
+		    // cout<<endl;
+		    switch( seqbuffer[j] ){
+		    case 'A':
+			fhMismatchA<<deflineInput<<"\t";
+			fhMismatchA<<( j  )<<"\t";
+			//fhMismatchA<<computeReverseComplement(seqbuffer,j-SIZE_TAGSIZE,SIZE_TAGSIZE)<<"\t";
+			printNChar(fhMismatchA,seqbuffer+j,SIZE_TAGSIZE);
+			fhMismatchA<<"\t+"<<endl;
+			break;
+		    case 'C':
+			fhMismatchC<<deflineInput<<"\t";
+			fhMismatchC<<( j  )<<"\t";
+			//fhMismatchC<<computeReverseComplement(seqbuffer,j-SIZE_TAGSIZE,SIZE_TAGSIZE)<<"\t";
+			printNChar(fhMismatchC,seqbuffer+j,SIZE_TAGSIZE);
+			fhMismatchC<<"\t+"<<endl;
+			break;
+		    case 'G':
+			fhMismatchG<<deflineInput<<"\t";
+			fhMismatchG<<( j  )<<"\t";
+			//fhMismatchG<<computeReverseComplement(seqbuffer,j-SIZE_TAGSIZE,SIZE_TAGSIZE)<<"\t";
+			printNChar(fhMismatchG,seqbuffer+j,SIZE_TAGSIZE);
+			fhMismatchG<<"\t+"<<endl;
+			break;
+		    case 'T':
+			fhMismatchT<<deflineInput<<"\t";
+			fhMismatchT<<( j  )<<"\t";
+			//fhMismatchT<<computeReverseComplement(seqbuffer,j-SIZE_TAGSIZE,SIZE_TAGSIZE)<<"\t";
+			printNChar(fhMismatchT,seqbuffer+j,SIZE_TAGSIZE);
+			fhMismatchT<<"\t+"<<endl;
+			break;
+		    default:
+			cerr<<( j  )<<"\t";
+			cerr<<"ERROR in sequence: "<<endl;
+			printNChar(cerr,seqbuffer+j,SIZE_TAGSIZE);
+			cerr<<"\t"<<returnCodeByMatchingFunction<<endl;
+			exit(1);
+		    }
+		}
+	
+	    }
+
+	    //printing reverse complement
+	    if(j>=SIZE_TAGSIZE-SIZE_RESTRICTION_SITE){
+		if(returnCodeByMatchingFunction == 0){
+		    fhPerfect<<deflineInput<<"\t";
+		    fhPerfect<<( j - (SIZE_TAGSIZE-SIZE_RESTRICTION_SITE) )<<"\t";
+		    fhPerfect<<computeReverseComplement(seqbuffer,(j-SIZE_TAGSIZE+SIZE_RESTRICTION_SITE),SIZE_TAGSIZE)<<"\t";
+		    fhPerfect<<"-"<<endl;
+		    // break;
+		}else{
+				    
+		    char * toprint=computeReverseComplement(seqbuffer,j-SIZE_TAGSIZE+SIZE_RESTRICTION_SITE,SIZE_TAGSIZE);
+		    // printNChar(cout,seqbuffer+(j-SIZE_TAGSIZE+SIZE_RESTRICTION_SITE),SIZE_TAGSIZE);
+		    // cout<<endl;
+		    // // printNChar(seqbuffer+j,SIZE_TAGSIZE);
+		    // // cout<<endl;
+		    //cout<<toprint<<endl;
+
+		    switch( toprint[0] ){
+		    case 'A':
+			fhMismatchA<<deflineInput<<"\t";
+			fhMismatchA<<( j - (SIZE_TAGSIZE-SIZE_RESTRICTION_SITE) )<<"\t";
+			fhMismatchA<<toprint<<"\t";
+			fhMismatchA<<"-"<<endl;
+			break;
+		    case 'C':
+			fhMismatchC<<deflineInput<<"\t";
+			fhMismatchC<<( j - (SIZE_TAGSIZE-SIZE_RESTRICTION_SITE) )<<"\t";
+			fhMismatchC<<toprint<<"\t";
+			fhMismatchC<<"-"<<endl;
+			break;
+		    case 'G':
+			fhMismatchG<<deflineInput<<"\t";
+			fhMismatchG<<( j - (SIZE_TAGSIZE-SIZE_RESTRICTION_SITE) )<<"\t";
+			fhMismatchG<<toprint<<"\t";
+			fhMismatchG<<"-"<<endl;
+			break;
+		    case 'T':
+			fhMismatchT<<deflineInput<<"\t";
+			fhMismatchT<<( j - (SIZE_TAGSIZE-SIZE_RESTRICTION_SITE) )<<"\t";
+			fhMismatchT<<toprint<<"\t";
+			fhMismatchT<<"-"<<endl;
+			break;
+		    default:
+			cerr<<( j - (SIZE_TAGSIZE-SIZE_RESTRICTION_SITE) )<<"\t";
+			cerr<<"ERROR in sequence: "<<toprint<<"\t"<<returnCodeByMatchingFunction<<endl;
+			exit(1);
+		    }
+		}
+
+	    }//else not perfect
+	}//if sufficient distance j
+
+			
+    }//end for loop
+		    
+}
 
 
 int main(int argc, char *argv[]){
@@ -299,11 +443,10 @@ int main(int argc, char *argv[]){
     
 
     int endCoordinatesForNextString;
-    unsigned long int counterOfChar=0;
+    // unsigned long int counterOfChar=0;
 
     char inputFileTags [1000];
 
-    int    returnCodeByMatchingFunction;
               
     char * DATABASE_defline;
     int  * DATABASE_defline_length;
@@ -533,72 +676,6 @@ int main(int argc, char *argv[]){
 
 
 
-    /******************************************/
-    /*                                        */
-    /*      READING INPUT FILE                */
-    /*                                        */
-    /******************************************/
-
-//     bool firstLine=true;
-
-// #ifdef WITH_COMMENTS
-//     cout<<endl<<"Input file : "<<inputFileTags<<endl;
-// #endif
-
-//     fastaReader myFastaReader (inputFileTags);
-//     char * sequenceFromInput=new char[1000];
-//     char * sequenceFromInputRC;
-//     char deflineFromInput[1000];
-//     //char restrictionSiteSequence[SIZE_RESTRICTION_SITE +1 ];
-
-//     while(myFastaReader.hasNextRecord()){
-	
-// 	record * currentRecord=myFastaReader.getNextRecord();
-// 	transform(currentRecord->sequence->begin(), 
-//  		  currentRecord->sequence->end(), 
-//  		  currentRecord->sequence->begin(), 
-//  		  (int(*)(int)) toupper);
-
-// 	sequenceFromInput[0]='\0';
-// 	strncpy(sequenceFromInput,
-// 		(*currentRecord->sequence).c_str()+SIZE_RESTRICTION_SITE, 
-// 		(*currentRecord->sequence).length()- SIZE_RESTRICTION_SITE);
-// 	sequenceFromInput[(*currentRecord->sequence).length()- SIZE_RESTRICTION_SITE]='\0';
-// 	sequenceFromInputRC=computeReverseComplement(sequenceFromInput, 
-// 						     (*currentRecord->sequence).length() - SIZE_RESTRICTION_SITE);	
-// 	//sequenceFromInputRC[(*currentRecord->sequence).length()- SIZE_RESTRICTION_SITE]='\0';
-
-// 	if(firstLine){		    
-// 	    SIZE_TAGSIZE=(*currentRecord->sequence).length();
-// 	    trieOftagSequences=new Trie<string>(  sequenceFromInput , (*currentRecord->defline));
-// 	    trieOftagSequencesRC=new Trie<string>(sequenceFromInputRC , (*currentRecord->defline));
-// 	    strncpy(restrictionSiteSequence,(*currentRecord->sequence).c_str(),SIZE_RESTRICTION_SITE);
-// 	    restrictionSiteSequence[SIZE_RESTRICTION_SITE]='\0';
-// 	    firstLine=false;
-// 	}else{
-// 	    //check length
-// 	    if((*currentRecord->sequence).length() != SIZE_TAGSIZE){
-// 		cerr<<"The length of the sequence "<<(*currentRecord->defline)<<" does not match the length of the others"<<endl;
-// 		exit(1);
-// 	    }
-// 	    //check prefix
-// 	    if(strncmp(restrictionSiteSequence,(*currentRecord->sequence).c_str(),SIZE_RESTRICTION_SITE) != 0){
-// 		cerr<<"The prefix of the sequence "<<(*currentRecord->defline)<<" does not match the prefixes previously found"<<endl;
-// 		exit(1);
-// 	    }
-		       
-
-// 	    trieOftagSequences->insert(sequenceFromInput   , (*currentRecord->defline));
-// 	    trieOftagSequencesRC->insert(sequenceFromInputRC , (*currentRecord->defline));
-// 	}
-
-// 	delete(currentRecord->defline);
-// 	delete(currentRecord->sequence);
-// 	delete(currentRecord);
-
-//     }
-    
-//     numberOfLinesInTheInputFile=indexInTheInputFile;
 
     /******************************************/
     /*                                        */
@@ -613,7 +690,11 @@ int main(int argc, char *argv[]){
 
     /*   Checking if RC of restrictionSiteSequence is still restrictionSiteSequence  */
     
-    char * testRC=computeReverseComplement(restrictionSiteSequence,SIZE_RESTRICTION_SITE);
+    char * testRC=computeReverseComplement(restrictionSiteSequence,0,SIZE_RESTRICTION_SITE);
+    // cout<<"test"<<endl;
+    // cout<<testRC<<endl;
+    // exit(1);
+
     if( strcmp(restrictionSiteSequence,testRC) != 0){
 	cerr<<"The reverse complement of the common prefix \""<<restrictionSiteSequence<<"\" is not the sequence itself"<<endl;
 	exit(1);
@@ -643,19 +724,31 @@ int main(int argc, char *argv[]){
     /*  GOING THROUGH DATABASE SEQUENCES      */
     /*                                        */
     /******************************************/
+    // cout<<INT_MAX<<endl;
+    // exit(1);
+    char * seqbuffer;
+    try{
+	seqbuffer =new char[INT_MAX];	
+    }catch(bad_alloc& exc){
+	cerr<<"allocating memory failed"<<endl;
+	return 1;
+    }
+
 
     string buffer;
     string previousLines="";
     string pPreviousLines="";
     string deflineInput;
     //    int endCoordinatesForNextString;
-    vector<struct matches<string> > * vectorOfDeflines;
-    vector<int>    indicesOfMatch;
-    vector<int>    basesFoundMatch;
-    vector<string> stringOfMatches;
-    vector<int>    mmFoundInRestSite;
+    // vector<struct matches<string> > * vectorOfDeflines;
+    // vector<int>    indicesOfMatch;
+    // vector<int>    basesFoundMatch;
+    // vector<string> stringOfMatches;
+    // vector<int>    mmFoundInRestSite;
 
-    int indexInSeq=0;
+    //    int indexInSeq=0;
+    bool foundPreviousSeq=false;
+    unsigned int positionInBuffer=0;
     fDatabase.open(databaseFileName);
     if ( ! fDatabase || !(fDatabase.is_open()) ){
 	cerr<<endl<<"Error, database file "<<databaseFileName<<" cannot be opened"<<endl;
@@ -677,19 +770,39 @@ int main(int argc, char *argv[]){
 	if(line[0] != '#'){
 	    //Detecting a defline
 	    if(line[0] == '>'){
-		deflineInput=string(line);
-		previousLines="";
-		pPreviousLines="";
+		
+		deflineInput=string(line);		
 
-		counterOfChar=0;
-		indexInSeq=0;
-		indicesOfMatch.clear();
-		basesFoundMatch.clear();
-		stringOfMatches.clear();
-		mmFoundInRestSite.clear();
 
+		if(foundPreviousSeq){//analyze buffer
+		    // cerr<<"done "<<endl;
+
+		    processLines(seqbuffer, 
+				 positionInBuffer,
+				 SIZE_TAGSIZE,
+				 SIZE_RESTRICTION_SITE,  
+				 restrictionSiteSequence,
+				 deflineInput,
+				 fhPerfect,
+				 fhMismatchA,
+				 fhMismatchC,
+				 fhMismatchG,
+				 fhMismatchT);
+
+			
+		}else{//if not previously found a seq, meaning first seq
+		    
+		}
+
+		// cerr<<"loading "<<deflineInput<<endl;
+
+		positionInBuffer=0;	
+		// counterOfChar=0;
+		// indexInSeq=0;
+		
 	    }else{
 
+		//checking line for invalid characters
 		for(int i=0;i<lengthOfLine;i++){
 		    line[i]=toupper(line[i]);
 		    if(int(line[i]) < 65 || 
@@ -697,195 +810,34 @@ int main(int argc, char *argv[]){
 			cout<<"Invalid character in line :"<<line<<endl;
 			exit(1);
 		    }
+		    seqbuffer[positionInBuffer++] =   line[i];
 		}
 
-
-		buffer=string(pPreviousLines+previousLines+line);
-		// if(previousLines.length() == 0 )
-		//     endCoordinatesForNextString=-1;
-		// else
-		//     endCoordinatesForNextString=buffer.length()-SIZE_TAGSIZE;
-		int firstIndex = MAX(0,previousLines.length() +pPreviousLines.length() );
-		if(firstIndex != 0){
-		    firstIndex=firstIndex-SIZE_RESTRICTION_SITE+1;
+		if(positionInBuffer > INT_MAX){
+		    cerr<<"buffer overflow, sequence "<<deflineInput<<" is too long "<<endl;
+		    exit(1);
 		}
+		foundPreviousSeq=true;
+
 		
-#ifdef DEBUG_KEEP_ON_DISK
-		cout<<"line           "<<line<<endl;
-		cout<<"buffer         "<<buffer<<endl;
-		cout<<"previousLines  "<<previousLines<<endl;
-		cout<<"pPreviousLines "<<pPreviousLines<<endl;
-		cout<<"firstIndex     "<<firstIndex<<endl<<endl;
-#endif
-
-		// cout<<"begin correction"<<endl;
-		vector<int>::iterator    itix = indicesOfMatch.begin();
-		vector<int>::iterator    itbs = basesFoundMatch.begin();
-		vector<string>::iterator itsm = stringOfMatches.begin();
-		vector<int>::iterator itmm = mmFoundInRestSite.begin();
-
-
-		while(itbs<basesFoundMatch.end()  || 
-		      itsm<stringOfMatches.end()  || 
-		      itix<indicesOfMatch.end()   || 
-		      itmm<mmFoundInRestSite.end() ){
-
-		    // cout<<"itbs "<<*itbs<<endl;
-		    // cout<<"itsm "<<*itsm<<endl;
-		    // cout<<"itix "<<*itix<<endl;
-		    // cout<<"itmm "<<*itmm<<endl;
-
-		    // cout<<indicesOfMatch.size()<<endl;
-		    // cout<<basesFoundMatch.size()<<endl;
-		    // cout<<stringOfMatches.size()<<endl;
-		    // cout<<mmFoundInRestSite.size()<<endl;
-
-		    if( (SIZE_TAGSIZE-*itbs) > line.length()){
-			*itbs=*itbs+line.length();
-			*itsm=string(*itsm+line);
-			//cout<<"keeping"<<endl;
-			itix++;
-			itbs++;
-			itsm++;
-			itmm++;
-
-		    }else{
-			*itsm=string(*itsm + line.substr(0,SIZE_TAGSIZE-*itbs) );
-			//cout<<"printing"<<endl;
-			if( (*itmm) == 0 ){
-			    fhPerfect<<deflineInput<<"\t";
-			    fhPerfect<<*itix<<"\t";
-			    fhPerfect<<*itsm<<"\t+"<<endl;
-			}else{
-			    //switch(char( (*itsm).substr(0,1) ) ){
-			    switch(char( (*itsm)[0] ) ){
-			    case 'A':
-				fhMismatchA<<deflineInput<<"\t";
-				fhMismatchA<<*itix<<"\t";
-				fhMismatchA<<*itsm<<"\t+"<<endl;
-				break;
-			    case 'C':
-				fhMismatchC<<deflineInput<<"\t";
-				fhMismatchC<<*itix<<"\t";
-				fhMismatchC<<*itsm<<"\t+"<<endl;
-				break;
-			    case 'G':
-				fhMismatchG<<deflineInput<<"\t";
-				fhMismatchG<<*itix<<"\t";
-				fhMismatchG<<*itsm<<"\t+"<<endl;
-				break;
-			    case 'T':
-				fhMismatchT<<deflineInput<<"\t";
-				fhMismatchT<<*itix<<"\t";
-				fhMismatchT<<*itsm<<"\t+"<<endl;
-				break;
-			    default:
-				cerr<<"ERROR "<<*itsm<<endl;
-				return 1;
-			    }
-			}
-			itix=indicesOfMatch.erase(itix);
-			itbs=basesFoundMatch.erase(itbs);
-			itsm=stringOfMatches.erase(itsm);
-			itmm=mmFoundInRestSite.erase(itmm);
-		    }
-		 
-		}
-		// cout<<"end correction"<<endl;		    
-		
-
-		for(int j=firstIndex;j<=(buffer.length()-SIZE_RESTRICTION_SITE);j++){		
-		    
-		    // fflush(stdout);
-		    returnCodeByMatchingFunction=matchString(restrictionSiteSequence, 
-		    					     SIZE_RESTRICTION_SITE,
-		    					     buffer.c_str(),
-		    					     j,
-		    					     NUMBER_OF_MISMATCHES);
-		    
-		    if(returnCodeByMatchingFunction != -1 ){
-		    	//cout <<"j "<<j<<" "<<returnCodeByMatchingFunction<<endl;
-			if(j>=SIZE_TAGSIZE-SIZE_RESTRICTION_SITE){
-			    if(returnCodeByMatchingFunction == 0){
-				fhPerfect<<deflineInput<<"\t";
-				fhPerfect<<indexInSeq +(j-previousLines.length()-pPreviousLines.length()) - (SIZE_TAGSIZE-SIZE_RESTRICTION_SITE)<<"\t";
-				fhPerfect<<computeReverseComplement((buffer.substr(j-SIZE_TAGSIZE+SIZE_RESTRICTION_SITE,SIZE_TAGSIZE)).c_str(),SIZE_TAGSIZE)<<"\t";
-				fhPerfect<<"-"<<endl;
-			    }else{
-				switch( computeReverseComplement((buffer.substr(j-SIZE_TAGSIZE+SIZE_RESTRICTION_SITE,SIZE_TAGSIZE)).c_str(),SIZE_TAGSIZE)[0] ){
-				case 'A':
-				    fhMismatchA<<deflineInput<<"\t";
-				    fhMismatchA<<indexInSeq +(j-previousLines.length()-pPreviousLines.length()) - (SIZE_TAGSIZE-SIZE_RESTRICTION_SITE)<<"\t";
-				    fhMismatchA<<computeReverseComplement((buffer.substr(j-SIZE_TAGSIZE+SIZE_RESTRICTION_SITE,SIZE_TAGSIZE)).c_str(),SIZE_TAGSIZE)<<"\t";
-				    fhMismatchA<<"-"<<endl;
-				    break;
-				case 'C':
-				    fhMismatchC<<deflineInput<<"\t";
-				    fhMismatchC<<indexInSeq +(j-previousLines.length()-pPreviousLines.length()) - (SIZE_TAGSIZE-SIZE_RESTRICTION_SITE)<<"\t";
-				    fhMismatchC<<computeReverseComplement((buffer.substr(j-SIZE_TAGSIZE+SIZE_RESTRICTION_SITE,SIZE_TAGSIZE)).c_str(),SIZE_TAGSIZE)<<"\t";
-				    fhMismatchC<<"-"<<endl;
-
-				    break;
-				case 'G':
-				    fhMismatchG<<deflineInput<<"\t";
-				    fhMismatchG<<indexInSeq +(j-previousLines.length()-pPreviousLines.length()) - (SIZE_TAGSIZE-SIZE_RESTRICTION_SITE)<<"\t";
-				    fhMismatchG<<computeReverseComplement((buffer.substr(j-SIZE_TAGSIZE+SIZE_RESTRICTION_SITE,SIZE_TAGSIZE)).c_str(),SIZE_TAGSIZE)<<"\t";
-				    fhMismatchG<<"-"<<endl;
-
-				    break;
-				case 'T':
-				    fhMismatchT<<deflineInput<<"\t";
-				    fhMismatchT<<indexInSeq +(j-previousLines.length()-pPreviousLines.length()) - (SIZE_TAGSIZE-SIZE_RESTRICTION_SITE)<<"\t";
-				    fhMismatchT<<computeReverseComplement((buffer.substr(j-SIZE_TAGSIZE+SIZE_RESTRICTION_SITE,SIZE_TAGSIZE)).c_str(),SIZE_TAGSIZE)<<"\t";
-				    fhMismatchT<<"-"<<endl;
-
-				    break;
-				default:
-				    cerr<<"ERROR "<<*itsm<<endl;
-				    return 1;
-				}
-
-				// fhMismatch<<deflineInput<<"\t";
-				// fhMismatch<<indexInSeq +(j-previousLines.length()-pPreviousLines.length()) - (SIZE_TAGSIZE-SIZE_RESTRICTION_SITE)<<"\t";
-				// fhMismatch<<computeReverseComplement((buffer.substr(j-SIZE_TAGSIZE+SIZE_RESTRICTION_SITE,SIZE_TAGSIZE)).c_str(),SIZE_TAGSIZE)<<"\t";
-				// fhMismatch<<"-"<<endl;
-			    }
-			}
-
-			// cout<<indicesOfMatch.size()<<endl;
-			// cout<<basesFoundMatch.size()<<endl;
-			// cout<<stringOfMatches.size()<<endl;
-			// cout<<mmFoundInRestSite.size()<<endl;
-			// cout<<"add itbs "<<(indexInSeq+ (j-previousLines.length()-pPreviousLines.length()))<<endl;
-			// cout<<"add itsm "<<(buffer.length()-j)<<endl;
-			// cout<<"add itix "<<(buffer.substr(j,buffer.length()-j))<<endl;
-			// cout<<"add itmm "<<(returnCodeByMatchingFunction)<<endl;
-			
-			indicesOfMatch.push_back(indexInSeq+ (j-previousLines.length()-pPreviousLines.length()));
-			basesFoundMatch.push_back(buffer.length()-j);
-			stringOfMatches.push_back(buffer.substr(j,buffer.length()-j));
-			mmFoundInRestSite.push_back(returnCodeByMatchingFunction);
-
-			// cout<<indicesOfMatch.size()<<endl;
-			// cout<<basesFoundMatch.size()<<endl;
-			// cout<<stringOfMatches.size()<<endl;
-			// cout<<mmFoundInRestSite.size()<<endl;			
-		    }
-		    		    
-		}
-
-		    
-		counterOfChar+=(endCoordinatesForNextString+1);
-
-		pPreviousLines=previousLines;
-		previousLines=line;
-		indexInSeq+=line.length();
 	    } //end if the line in the input file does not begin with >
 	} //end if the line in the input file does not begin with #
     } //end for each line in the input file
+    //last record
+    processLines(seqbuffer, 
+		 positionInBuffer,
+		 SIZE_TAGSIZE,
+		 SIZE_RESTRICTION_SITE,  
+		 restrictionSiteSequence,
+		 deflineInput,
+		 fhPerfect,
+		 fhMismatchA,
+		 fhMismatchC,
+		 fhMismatchG,
+		 fhMismatchT);
 
     fDatabase.close();
-
+ 
 #ifdef WITH_COMMENTS
     cout<<endl<<"Succes ! Found annotated "<<numberOfLinesInTheInputFile<<" records"<<endl;
 #endif
