@@ -478,7 +478,7 @@ if ( (-e $outdir."all".".".$restSequence.".l".$length.".mm0.out") ){
 if ( (-e $outdir."all".".".$restSequence.".l".$length.".mm1.outA") ){
   warn "Found ".$outdir."all".".".$restSequence.".l".$length.".mm1.outA\n";
 }else{
-  my $cmd="src/readFiles.pl ".$restSequence." A 1 ".$refseqFN." ".$unigeneFN." ".$genomicFN." $outdir $length > ".$outdir."all.".$restSequence.".l".$length.".mm1.outA";
+  my $cmd="src/readFiles.pl ".$restSequence." A 1 ".$refseqFN." ".$unigeneFN." ".$genomicFN." $outdir $length  > ".$outdir."all.".$restSequence.".l".$length.".mm1.outA";
   #`$cmd`;
   #if($? != 0){
   #  die "Command ".$cmd." failed";
@@ -490,7 +490,7 @@ if ( (-e $outdir."all".".".$restSequence.".l".$length.".mm1.outA") ){
 if ( (-e $outdir."all".".".$restSequence.".l".$length.".mm1.outC") ){
   warn "Found ".$outdir."all".".".$restSequence.".l".$length.".mm1.outC\n";
 }else{
-  my $cmd="src/readFiles.pl ".$restSequence." C 1 ".$refseqFN." ".$unigeneFN." ".$genomicFN." $outdir $length > ".$outdir."all.".$restSequence.".l".$length.".mm1.outC";
+  my $cmd="src/readFiles.pl ".$restSequence." C 1 ".$refseqFN." ".$unigeneFN." ".$genomicFN." $outdir $length   > ".$outdir."all.".$restSequence.".l".$length.".mm1.outC";
   #`$cmd`;
   #if($? != 0){
   #  die "Command ".$cmd." failed";
@@ -502,11 +502,11 @@ if ( (-e $outdir."all".".".$restSequence.".l".$length.".mm1.outC") ){
 if ( (-e $outdir."all".".".$restSequence.".l".$length.".mm1.outG") ){
   warn "Found ".$outdir."all".".".$restSequence.".l".$length.".mm1.outG\n";
 }else{
-  my $cmd="src/readFiles.pl ".$restSequence." G 1 ".$refseqFN." ".$unigeneFN." ".$genomicFN." $outdir $length > ".$outdir."all.".$restSequence.".l".$length.".mm1.outG";
-#  `$cmd`;
-#  if($? != 0){
-#    die "Command ".$cmd." failed";
-#  }
+  my $cmd="src/readFiles.pl ".$restSequence." G 1 ".$refseqFN." ".$unigeneFN." ".$genomicFN." $outdir $length  > ".$outdir."all.".$restSequence.".l".$length.".mm1.outG";
+  #  `$cmd`;
+  #  if($? != 0){
+  #    die "Command ".$cmd." failed";
+  #  }
   systemBash($cmd);
 
 }
@@ -514,14 +514,13 @@ if ( (-e $outdir."all".".".$restSequence.".l".$length.".mm1.outG") ){
 if ( (-e $outdir."all".".".$restSequence.".l".$length.".mm1.outT") ){
   warn "Found ".$outdir."all".".".$restSequence.".l".$length.".mm1.outT\n";
 }else{
-  my $cmd="src/readFiles.pl ".$restSequence." T 1 ".$refseqFN." ".$unigeneFN." ".$genomicFN." $outdir $length > ".$outdir."all.".$restSequence.".l".$length.".mm1.outT";
-#  print $cmd;
-#  `$cmd`;
-#  if($? != 0){
-#    die "Command ".$cmd." failed";
-#  }
-    systemBash($cmd);
-
+  my $cmd="src/readFiles.pl ".$restSequence." T 1 ".$refseqFN." ".$unigeneFN." ".$genomicFN." $outdir $length   > ".$outdir."all.".$restSequence.".l".$length.".mm1.outT";
+  #  print $cmd;
+  #  `$cmd`;
+  #  if($? != 0){
+  #    die "Command ".$cmd." failed";
+  #  }
+  systemBash($cmd);
 }
 
 my $lastDbIndex;
