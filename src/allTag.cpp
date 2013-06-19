@@ -771,7 +771,6 @@ int main(int argc, char *argv[]){
 	    //Detecting a defline
 	    if(line[0] == '>'){
 		
-		deflineInput=string(line);		
 
 
 		if(foundPreviousSeq){//analyze buffer
@@ -795,7 +794,7 @@ int main(int argc, char *argv[]){
 		}
 
 		// cerr<<"loading "<<deflineInput<<endl;
-
+		deflineInput=string(line);		
 		positionInBuffer=0;	
 		// counterOfChar=0;
 		// indexInSeq=0;
