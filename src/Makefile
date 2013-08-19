@@ -20,7 +20,7 @@ all:	searchtags  allTag #trieTag
 allTag:	fastaReader.o	trie.o allTag.o gzstream/gzstream.o
 	${CXX}  -o $@ $^ $(LDLIBS) $(LDFLAGS)
 
-searchtags:	fastaReader.o	trie.o searchtags.o
+searchtags:	fastaReader.o	trie.o searchtags.o gzstream/gzstream.o
 	${CXX} -o $@ $^ $(LDLIBS) $(LDFLAGS)
 
 clean:

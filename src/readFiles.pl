@@ -191,7 +191,7 @@ while (1) {
   #my @toprintRF2;
   #my @toprintUG2;
   #my @toprintWG2;
-  if(0){
+  if(1){
     if($#toprintRF >= 10 ){
       @toprintRF=pickSubArray(@toprintRF);
     }#else{

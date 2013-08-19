@@ -7,6 +7,9 @@ use Getopt::Std;
 use Data::Dumper;
 use File::Basename;
 
+#use IO::Compress::Gzip qw(gzip $GzipError) ;
+use IO::Zlib;
+
 my $fakeRun       = 0;
 
 #sub systemBash {
@@ -464,10 +467,10 @@ if ( (-e $outdir.$genomicFN.".".$restSequence.".l".$length.".mm0.out.gz") &&
 
 
 
-if ( (-e $outdir."all".".".$restSequence.".l".$length.".mm0.out") ){
-  warn "Found ".$outdir."all".".".$restSequence.".l".$length.".mm0.out\n";
+if ( (-e $outdir."all".".".$restSequence.".l".$length.".mm0.out.gz") ){
+  warn "Found ".$outdir."all".".".$restSequence.".l".$length.".mm0.out.gz\n";
 }else{
-  my $cmd="src/readFiles.pl ".$restSequence." A 0  ".$refseqFN." ".$unigeneFN." ".$genomicFN." $outdir $length  > ".$outdir."all.".$restSequence.".l".$length.".mm0.out";
+  my $cmd="src/readFiles.pl ".$restSequence." A 0  ".$refseqFN." ".$unigeneFN." ".$genomicFN." $outdir $length | gzip   > ".$outdir."all.".$restSequence.".l".$length.".mm0.out.gz";
   #`$cmd`;
   #if($? != 0){
   #  die "Command ".$cmd." failed";
@@ -475,22 +478,10 @@ if ( (-e $outdir."all".".".$restSequence.".l".$length.".mm0.out") ){
   systemBash($cmd);
 }
 
-if ( (-e $outdir."all".".".$restSequence.".l".$length.".mm1.outA") ){
-  warn "Found ".$outdir."all".".".$restSequence.".l".$length.".mm1.outA\n";
+if ( (-e $outdir."all".".".$restSequence.".l".$length.".mm1.outA.gz") ){
+  warn "Found ".$outdir."all".".".$restSequence.".l".$length.".mm1.outA.gz\n";
 }else{
-  my $cmd="src/readFiles.pl ".$restSequence." A 1 ".$refseqFN." ".$unigeneFN." ".$genomicFN." $outdir $length  > ".$outdir."all.".$restSequence.".l".$length.".mm1.outA";
-  #`$cmd`;
-  #if($? != 0){
-  #  die "Command ".$cmd." failed";
-  #}
-  systemBash($cmd);
-
-}
-
-if ( (-e $outdir."all".".".$restSequence.".l".$length.".mm1.outC") ){
-  warn "Found ".$outdir."all".".".$restSequence.".l".$length.".mm1.outC\n";
-}else{
-  my $cmd="src/readFiles.pl ".$restSequence." C 1 ".$refseqFN." ".$unigeneFN." ".$genomicFN." $outdir $length   > ".$outdir."all.".$restSequence.".l".$length.".mm1.outC";
+  my $cmd="src/readFiles.pl ".$restSequence." A 1 ".$refseqFN." ".$unigeneFN." ".$genomicFN." $outdir $length | gzip  > ".$outdir."all.".$restSequence.".l".$length.".mm1.outA.gz";
   #`$cmd`;
   #if($? != 0){
   #  die "Command ".$cmd." failed";
@@ -499,10 +490,22 @@ if ( (-e $outdir."all".".".$restSequence.".l".$length.".mm1.outC") ){
 
 }
 
-if ( (-e $outdir."all".".".$restSequence.".l".$length.".mm1.outG") ){
-  warn "Found ".$outdir."all".".".$restSequence.".l".$length.".mm1.outG\n";
+if ( (-e $outdir."all".".".$restSequence.".l".$length.".mm1.outC.gz") ){
+  warn "Found ".$outdir."all".".".$restSequence.".l".$length.".mm1.outC.gz\n";
 }else{
-  my $cmd="src/readFiles.pl ".$restSequence." G 1 ".$refseqFN." ".$unigeneFN." ".$genomicFN." $outdir $length  > ".$outdir."all.".$restSequence.".l".$length.".mm1.outG";
+  my $cmd="src/readFiles.pl ".$restSequence." C 1 ".$refseqFN." ".$unigeneFN." ".$genomicFN." $outdir $length  | gzip  > ".$outdir."all.".$restSequence.".l".$length.".mm1.outC.gz";
+  #`$cmd`;
+  #if($? != 0){
+  #  die "Command ".$cmd." failed";
+  #}
+  systemBash($cmd);
+
+}
+
+if ( (-e $outdir."all".".".$restSequence.".l".$length.".mm1.outG.gz") ){
+  warn "Found ".$outdir."all".".".$restSequence.".l".$length.".mm1.outG.gz\n";
+}else{
+  my $cmd="src/readFiles.pl ".$restSequence." G 1 ".$refseqFN." ".$unigeneFN." ".$genomicFN." $outdir $length  | gzip  > ".$outdir."all.".$restSequence.".l".$length.".mm1.outG.gz";
   #  `$cmd`;
   #  if($? != 0){
   #    die "Command ".$cmd." failed";
@@ -511,10 +514,10 @@ if ( (-e $outdir."all".".".$restSequence.".l".$length.".mm1.outG") ){
 
 }
 
-if ( (-e $outdir."all".".".$restSequence.".l".$length.".mm1.outT") ){
-  warn "Found ".$outdir."all".".".$restSequence.".l".$length.".mm1.outT\n";
+if ( (-e $outdir."all".".".$restSequence.".l".$length.".mm1.outT.gz") ){
+  warn "Found ".$outdir."all".".".$restSequence.".l".$length.".mm1.outT.gz\n";
 }else{
-  my $cmd="src/readFiles.pl ".$restSequence." T 1 ".$refseqFN." ".$unigeneFN." ".$genomicFN." $outdir $length   > ".$outdir."all.".$restSequence.".l".$length.".mm1.outT";
+  my $cmd="src/readFiles.pl ".$restSequence." T 1 ".$refseqFN." ".$unigeneFN." ".$genomicFN." $outdir $length  | gzip  > ".$outdir."all.".$restSequence.".l".$length.".mm1.outT.gz";
   #  print $cmd;
   #  `$cmd`;
   #  if($? != 0){
@@ -523,12 +526,15 @@ if ( (-e $outdir."all".".".$restSequence.".l".$length.".mm1.outT") ){
   systemBash($cmd);
 }
 
+
+
+#die;
 my $lastDbIndex;
-if ( (-e $outdir."all".".".$restSequence.".l".$length.".db.0") ){
+if ( (-e $outdir."all".".".$restSequence.".l".$length.".db.0.gz") ){
   my $dbIndex=0;
 
-  while((-e $outdir."all".".".$restSequence.".l".$length.".db.".$dbIndex ) ){
-    warn "Found ".$outdir."all".".".$restSequence.".l".$length.".db.".$dbIndex."\n";
+  while((-e $outdir."all".".".$restSequence.".l".$length.".db.".$dbIndex.".gz" ) ){
+    warn "Found ".$outdir."all".".".$restSequence.".l".$length.".db.".$dbIndex.".gz\n";
     $lastDbIndex=$dbIndex;
     $dbIndex++;
   }
@@ -540,18 +546,23 @@ if ( (-e $outdir."all".".".$restSequence.".l".$length.".db.0") ){
 
   my $dbIndex=0;
 
-  my @arrayOfFilesToCombine = ($outdir."all.".$restSequence.".l".$length.".mm0.out",
-			       $outdir."all.".$restSequence.".l".$length.".mm1.outA",
-			       $outdir."all.".$restSequence.".l".$length.".mm1.outC",
-			       $outdir."all.".$restSequence.".l".$length.".mm1.outG",
-			       $outdir."all.".$restSequence.".l".$length.".mm1.outT");
+  my @arrayOfFilesToCombine = ($outdir."all.".$restSequence.".l".$length.".mm0.out.gz",
+			       $outdir."all.".$restSequence.".l".$length.".mm1.outA.gz",
+			       $outdir."all.".$restSequence.".l".$length.".mm1.outC.gz",
+			       $outdir."all.".$restSequence.".l".$length.".mm1.outG.gz",
+			       $outdir."all.".$restSequence.".l".$length.".mm1.outT.gz");
   if (!$fakeRun) {
 
-    open(FILEOUT,">".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex) or die "Cannot open ".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex." for writing\n";
-    warn "Writing to ".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex."\n";
+    #open(FILEOUT,">".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex.".gz") or die "Cannot open ".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex.".gz for writing\n";
+    #my $FILEOUT = new IO::Zlib; 
+    #my $FILEOUT = IO::Zlib->new( $outdir."all.".$restSequence.".l".$length.".db.".$dbIndex.".gz" , "rb");
+    open(FILEOUT," | gzip > ".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex.".gz") or die "Cannot pipe to ".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex.".gz for writing\n";
+    #if( !(defined $FILEOUT) ){
+    warn "Writing to ".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex.".gz\n";
 
     foreach my $file (@arrayOfFilesToCombine) {
-      open(FILE,$file) or die "Cannot open ".$file."\n";
+      #open(FILE,$file) or die "Cannot open ".$file."\n";
+      open(FILE,"gunzip -c $file |") || die "can't open pipe to $file\n";
       while ($line =<FILE>) {
 	print FILEOUT $line;
 	$lineNumber++;
@@ -559,8 +570,8 @@ if ( (-e $outdir."all".".".$restSequence.".l".$length.".db.0") ){
 	  $lineNumber=0;
 	  $dbIndex++;
 	  $lastDbIndex=$dbIndex;
-	  open(FILEOUT,">".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex) or die "Cannot open ".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex." for writing\n";
-	  warn "Writing to ".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex."\n";
+	  open(FILEOUT," | gzip > ".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex.".gz") or die "Cannot pipe to ".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex." for writing\n";
+	  warn "Writing to ".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex.".gz\n";
 	}
       }
       close(FILE);
@@ -568,22 +579,26 @@ if ( (-e $outdir."all".".".$restSequence.".l".$length.".db.0") ){
     }
 
     close(FILEOUT);
+    #$FILEOUT->close;
+
   }else{
     warn "Combining files :\n";
     foreach my $file (@arrayOfFilesToCombine) {
       warn $file."\n";
     }
-    warn "into ".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex."\n";
+    warn "into ".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex.".gz\n";
     $lastDbIndex=1;
   }
 }
+
+
 
 
 if($onlyCreateDatabase == 0){
 
 
   for(my $dbindex=0;$dbindex<=$lastDbIndex;$dbindex++){
-    my $cmd="src/searchtags ".$outdir."all".".".$restSequence.".l".$length.".db.".$dbindex." ".$inputFile." ".$allowedMismatches." > ".$inputFile.".out".$dbindex."\n";
+    my $cmd="src/searchtags ".$outdir."all".".".$restSequence.".l".$length.".db.".$dbindex.".gz ".$inputFile." ".$allowedMismatches." > ".$inputFile.".out".$dbindex."\n";
     systemBash($cmd);
   }
 

@@ -5,10 +5,10 @@
 #include <map>
 #include <math.h>
 #include <stdio.h>
+#include <gzstream.h>
 
 #include "trie.h"
 #include "fastaReader.h"
-
 
 using namespace std;
 
@@ -162,9 +162,9 @@ int main(int argc, char *argv[]){
 	return 1;
     }
 
-    ifstream fDatabase;
+    igzstream fDatabase;
     string databaseFileName=string(argv[1]);
-    ifstream fInput;
+    igzstream fInput;
     string inputFileName=string(argv[2]);
     int numberOfMismatches=atoi(argv[3]);
     if(numberOfMismatches < 0  ||
@@ -180,7 +180,7 @@ int main(int argc, char *argv[]){
 
 
     fDatabase.open(databaseFileName.c_str());
-    if ( ! fDatabase || !(fDatabase.is_open()) ){
+    if ( !(fDatabase.good()) ){
 	cerr<<endl<<"Error, database file "<<databaseFileName<<" cannot be opened"<<endl;
 	exit(1);	
     }
@@ -193,9 +193,11 @@ int main(int argc, char *argv[]){
     }
     fDatabase.close();
 
-    fDatabase.open(databaseFileName.c_str());
-    if ( ! fDatabase || !(fDatabase.is_open()) ){
-	cerr<<endl<<"Error, database file "<<databaseFileName<<" cannot be opened"<<endl;
+    igzstream fDatabase2;
+
+    fDatabase2.open(databaseFileName.c_str());
+    if ( !(fDatabase2.good()) ){
+	cerr<<endl<<"Error, database file "<<databaseFileName<<" cannot be opened for the second time"<<endl;
 	exit(1);	
     }
 
@@ -203,7 +205,7 @@ int main(int argc, char *argv[]){
     bool firstLine=true;	
     string token;
     int lineCounterdb=0;
-    while( getline(fDatabase, line) ){
+    while( getline(fDatabase2, line) ){
 	if(lineCounterdb%1000000==0){
 	    progress_func(lineCounterdb,totalLinesdb);
 	}
@@ -321,7 +323,7 @@ int main(int argc, char *argv[]){
 	lineCounterdb++;
     }
 
-    fDatabase.close();
+    fDatabase2.close();
 
 
     // char * sequenceFromInput=new char[1000];
@@ -337,7 +339,7 @@ int main(int argc, char *argv[]){
     // trieOftagSequences->insert("CGTAGTCCTG" , ">test4");
     cerr<<"searching "<<endl;
     fInput.open(inputFileName.c_str());
-    if ( ! fInput || !(fInput.is_open()) ){
+    if ( !(fInput.good()) ){
 	cerr<<endl<<"Error, input file "<<inputFileName<<" cannot be opened"<<endl;
 	exit(1);	
     }
