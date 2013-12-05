@@ -5,10 +5,12 @@
 \usepackage{amssymb}
 %\usepackage[boxed]{algorithm2e}
 \usepackage{color}
- 
+\usepackage{listings}
+
 %\usepackage{listings}
 %lstset{breaklines=true} 
 \setlength\parindent{0pt}
+\lstset{breaklines=true}
 
 \begin{document}
 
@@ -231,5 +233,28 @@ id of reference match[:]position (0-based):strand
 
 Each match is delimited by three commas (`,,,`). 
 
+\section{Test set}
+
+A small test set can be found in testData/, the following files should be there:
+\begin{center}
+\begin{tabular}{ll}
+\hline
+File  & Content \\
+\hline
+database/refseq.fa & RefSeq reference \\
+database/unigene.fa & Unigene reference \\
+database/genome.fa & Genome reference \\
+input/test.fq    &  Test input \\
+\hline
+\end{tabular}
+\end{center}
+
+
+The program can be used using the following command line :
+\begin{lstlisting}
+./mainScript.pl -l 30 -r GATC -o testData/database/ -s testData/database/refseq.fa -u testData/database/unigene.fa -g testData/database/genome.fa -i testData/input/test.fq 
+\end{lstlisting}
+
+the final output will be found in input/test.fq.out.
 
 \end{document}

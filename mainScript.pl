@@ -559,9 +559,9 @@ if ( (-e $outdir."all".".".$restSequence.".l".$length.".db.0.gz") ){
     open(FILEOUT," | gzip > ".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex.".gz") or die "Cannot pipe to ".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex.".gz for writing\n";
     #if( !(defined $FILEOUT) ){
     warn "Writing to ".$outdir."all.".$restSequence.".l".$length.".db.".$dbIndex.".gz\n";
+    $lastDbIndex=0;
 
     foreach my $file (@arrayOfFilesToCombine) {
-      #open(FILE,$file) or die "Cannot open ".$file."\n";
       open(FILE,"gunzip -c $file |") || die "can't open pipe to $file\n";
       while ($line =<FILE>) {
 	print FILEOUT $line;
@@ -592,7 +592,7 @@ if ( (-e $outdir."all".".".$restSequence.".l".$length.".db.0.gz") ){
 }
 
 
-
+#die $lastDbIndex;
 
 if($onlyCreateDatabase == 0){
 
