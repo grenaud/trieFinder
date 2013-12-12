@@ -56,7 +56,10 @@ Given short MPSS tags that were sequenced :
 
 trieFinder will report the hits across 3 different databases for those tags, one line per tag, where the hits are prioritized according to the database, where a certain number of hits are reported along with the strand and the total number of hits for this database  :
 
-
+Columns:
+    tagID	tagseq	0mmRefseq	(#0mmRefseq)	>0mmRefseq	(#>0mmRefseq)	0mmUnigene	(#0mmUnigene)	>0mmUnigene	(#>0mmUnigene)	0mmGenome	(#0mmGenome)
+>0mmGenome	(#>0mmGenome)
+Output:
     @seq1	GATCGTCTGGAGCCTCCTCAAATGACACAC		(0)		(0)	>gnl|UG|Dr#S12243245:+,,,>gnl|UG|Dr#S36304394:+,,,>gnl|UG|Dr#S36299574:+,,,>gnl|UG|Dr#S12193130:+,,,>gnl|UG|Dr#S36316063:+,,,>gnl|UG|Dr#S12121054:+,,,>gnl|UG|Dr#S34224301:+,,,>gnl|UG|Dr#S12124397:+,,,>gnl|UG|Dr#S36315971:-,,,>gnl|UG|Dr#S21009866:-,,,>gnl|UG|Dr#S18222838:-,,,>gnl|UG|Dr#S12125085:-,,,>gnl|UG|Dr#S18221142:-	(26)		(0)		(0)
     @seq2	GATCATGCCGCCGCAGCCATCGCCAAAACC		(0)		(0)	>gnl|UG|Dr#S36280454:+,,,>gnl|UG|Dr#S46923620:+,,,>gnl|UG|Dr#S24522822:+,,,>gnl|UG|Dr#S34306077:+,,,>gnl|UG|Dr#S24523153:+,,,>gnl|UG|Dr#S19528905:+,,,>gnl|UG|Dr#S52625016:+,,,>gnl|UG|Dr#S26412454:+,,,>gnl|UG|Dr#S12281713:+,,,>gnl|UG|Dr#S19069881:+,,,>gnl|UG|Dr#S18655929:+,,,>gnl|UG|Dr#S21532139:+,,,>gnl|UG|Dr#S16007879:+,,,>gnl|UG|Dr#S26411042:+,,,>gnl|UG|Dr#S15988909:+	(6)		(0)		(0)
     @seq3	GATCAGACCAGCAACAAACTACAGCATTCA	>gi|47087442|ref|NM_213455.1|:+,,,>gnl|UG|Dr#S32062939:+,,,>gnl|UG|Dr#S16155405:+,,,>gnl|UG|Dr#S31888623:+,,,>gnl|UG|Dr#S36329495:+,,,>gnl|UG|Dr#S12247787:+,,,>gnl|UG|Dr#S31884660:+,,,>gnl|UG|Dr#S26113583:+	(10)		(0)		(0)		(0)
