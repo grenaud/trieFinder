@@ -58,8 +58,7 @@ trieFinder will report the hits across 3 different databases for those tags, one
 
 Columns:
 
-    tagID	tagseq	0mmRefseq	(#0mmRefseq)	>0mmRefseq	(#>0mmRefseq)	0mmUnigene	(#0mmUnigene)	>0mmUnigene	(#>0mmUnigene)	0mmGenome	(#0mmGenome)
->0mmGenome	(#>0mmGenome)
+    tagID	tagseq	0mmRefseq	(#0mmRefseq)	>0mmRefseq	(#>0mmRefseq)	0mmUnigene	(#0mmUnigene)	>0mmUnigene	(#>0mmUnigene)	0mmGenome	(#0mmGenome) >0mmGenome	(#>0mmGenome)
 
 Output:
     @seq1	GATCGTCTGGAGCCTCCTCAAATGACACAC		(0)		(0)	>gnl|UG|Dr#S12243245:+,,,>gnl|UG|Dr#S36304394:+,,,>gnl|UG|Dr#S36299574:+,,,>gnl|UG|Dr#S12193130:+,,,>gnl|UG|Dr#S36316063:+,,,>gnl|UG|Dr#S12121054:+,,,>gnl|UG|Dr#S34224301:+,,,>gnl|UG|Dr#S12124397:+,,,>gnl|UG|Dr#S36315971:-,,,>gnl|UG|Dr#S21009866:-,,,>gnl|UG|Dr#S18222838:-,,,>gnl|UG|Dr#S12125085:-,,,>gnl|UG|Dr#S18221142:-	(26)		(0)		(0)
