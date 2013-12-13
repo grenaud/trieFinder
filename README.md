@@ -58,7 +58,8 @@ trieFinder will report the hits across 3 different databases for those tags, one
 
 Columns:
 
-    tagID	tagseq	0mmRefseq	(#0mmRefseq)	>0mmRefseq	(#>0mmRefseq)	0mmUnigene	(#0mmUnigene)	>0mmUnigene	(#>0mmUnigene)	0mmGenome	(#0mmGenome) >0mmGenome	(#>0mmGenome)
+    tagID	tagseq	0_mismatch_Refseq	(#0_mismatch_Refseq)	>0_mismatch_Refseq	(#>0_mismatch_Refseq)	0_mismatch_Unigene	(#0_mismatch_Unigene)	>0_mismatch_Unigene	(#>0_mismatch_Unigene)	0_mismatch_Genome	(#0_mismatch_Genome)	>0_mismatch_Genome	(#>0_mismatch_Genome)
+
 
 Output:
 
