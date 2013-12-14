@@ -60,6 +60,27 @@ Columns:
 
     tagID	tagseq	0_mismatch_Refseq	(#0_mismatch_Refseq)	>0_mismatch_Refseq	(#>0_mismatch_Refseq)	0_mismatch_Unigene	(#0_mismatch_Unigene)	>0_mismatch_Unigene	(#>0_mismatch_Unigene)	0_mismatch_Genome	(#0_mismatch_Genome)	>0_mismatch_Genome	(#>0_mismatch_Genome)
 
+Column meaning:
+
+
+    -------------------------------------------------------------------------------------------
+    | Column           | Meaning                                                              |
+    -------------------------------------------------------------------------------------------
+    | tagID            |  tag identifier                                                      | 
+    | tagseq           |  tag sequence                                                        | 
+    | 0_mm_Refseq      |  Identifier of the RefSeq(s) hit with 0 mismatches                   | 
+    | (#0_mm_Refseq)   |  Number of RefSeq(s) hit with 0 mismatches                           | 
+    | >0_mm_Refseq     |  Identifier of the RefSeq(s) hit with 1 or more mismatches           | 
+    | (#>0_mm_Refseq)  |  Number of RefSeq(s) hit with 1 or more mismatches                   | 
+    | 0_mm_Unigene     |  Identifier of the UniGene sequence(s) hit with 0 mismatches         | 
+    | (#0_mm_Unigene)  |  Number of UniGene sequence(s) hit with 0 mismatches                 | 
+    | >0_mm_Unigene    |  Identifier of the UniGene sequence(s) hit with 1 or more mismatches | 
+    | (#>0_mm_Unigene) |  Number of UniGene sequence(s) hit with 1 or more mismatches         | 
+    | 0_mm_Genome      |  Identifier of the Genome sequence(s) hit with 0 mismatches          | 
+    | (#0_mm_Genome)   |  Number of  Genome sequence(s) hit with 0 mismatches                 | 
+    | >0_mm_Genome     |  Identifier of the  Genome sequence(s) hit with 1 or more mismatches | 
+    | (#>0_mm_Genome)  |  Number of  Genome sequence(s) hit with 1 or more mismatches         |   
+    -------------------------------------------------------------------------------------------
 
 Output:
 
