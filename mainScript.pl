@@ -25,7 +25,8 @@ my $fakeRun       = 0;
 #}
 
 #ugly hack due to the fact that we need to wait for processes writing to file descriptor
-#rather than actual files
+#rather than actual files recursively finds all PIDs where the parent is the
+#given as argument
 sub findAllPIDs{
  my ($firstPID) = @_;
  my %hashPID;
@@ -34,41 +35,101 @@ sub findAllPIDs{
  do{
    $found=0;
    foreach my $key (keys %hashPID){
-     my $cmd="ps -o pid --ppid ".$key;
+     my $cmd="ps -f  -A 2> /dev/null";
      my $out=`$cmd`;
-     foreach my $line (split("\n",$out)){
+
+     if($? != 0){
+       $cmd="ps -f  -a  2> /dev/null";
+       $out=`$cmd`;
+     }
+     $out =~ s/^\s+//;
+     $out =~ s/\s+$//;
+
+
+     my @allLines  = split("\n",$out);
+     my $firstLine = shift(@allLines);
+
+     my @fieldFirstLine = split(/\s+/,$firstLine);
+
+     if($fieldFirstLine[1] ne  "PID"){
+       die "The ps command does not follow UNIX standards, please use a MAC or Linux system fields = ".Dumper(@fieldFirstLine);
+     }
+     if($fieldFirstLine[2] ne  "PPID"){
+       die "The ps command does not follow UNIX standards, please use a MAC or Linux system fiels  = ".Dumper(@fieldFirstLine);
+     }
+
+     foreach my $line (@allLines){
        $line =~ s/^\s+//;
        $line =~ s/\s+$//;
-       if($line ne "PID"){
-         if(!(exists $hashPID{$line})){
-           $hashPID{$line}=1;
+
+       my @fields = split(/\s+/,$line);
+       if($fields[2] eq $key){ #if parent ID is the one sought
+	 if(!(exists $hashPID{$fields[1]})){
+           $hashPID{$fields[1]}=1;
            $found=1;
          }
        }
      }
+
+
    }
 
  }while($found);
  return (keys %hashPID);
 }
 
+
+#check if a process exists in the process table
+#and waits for it to die
 sub poll{
  my $proc=shift;
  while(1){
-   my $cmd="ps  -o s --pid $proc";
+   my $cmd="ps  -f -A 2> /dev/null ";
    my $out=`$cmd`;
+
+   if($? != 0){
+     $cmd="ps -f  -a  2> /dev/null ";
+     $out=`$cmd`;
+   }
+   $out =~ s/^\s+//;
+   $out =~ s/\s+$//;
+
+
+
    my $found=0;
    my @arr=split("\n",$out);
-   shift(@arr);
+
+   my $firstLine = shift(@arr); #header
+   my @fieldFirstLine = split(/\s+/,$firstLine);
+
+   if($fieldFirstLine[1] ne  "PID"){
+     die "The ps command does not follow UNIX standards, please use a MAC or Linux system fields =".Dumper(@fieldFirstLine);
+   }
+   if($fieldFirstLine[2] ne  "PPID"){
+     die "The ps command does not follow UNIX standards, please use a MAC or Linux system fiels  = ".Dumper(@fieldFirstLine);
+   }
+
+
+
    foreach my $line (@arr){
      $line =~ s/^\s+//;
      $line =~ s/\s+$//;
-     if($line ne "Z"  ){
-       $found=1;
+     my @fields = split(/\s+/,$line);
+     #print Dumper(@fields);
+     #print $proc;
+     #print "#".$fields[1]."#\n";
+     if($fields[1] eq $proc){
+       if($fields[$#fields] ne "<defunct>"){ #check for zombie
+	 #print "found ";
+	 $found=1;
+       }
      }
    }
    if(!$found){
+     #print "not found ".$proc." exiting\n";
      return $proc;
+   }else{
+     #print "found ".$proc." looping\n";
    }
    sleep(2);
  }
@@ -85,7 +146,9 @@ sub systemBash {
      exec(@args);
    }else{
      sleep(1);
+     #print "PID of child $pid\n";
      my @array=findAllPIDs($pid);
+     #print "PID to wait for :".Dumper(@array);
      foreach my $pid (@array){
        my $code =poll($pid);
      }

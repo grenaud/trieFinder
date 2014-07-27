@@ -19,9 +19,11 @@ all:	searchtags  allTag #trieTag
 
 allTag:	fastaReader.o	trie.o allTag.o gzstream/gzstream.o
 	${CXX}  -o $@ $^ $(LDLIBS) $(LDFLAGS)
+	mv -f allTag.exe allTag
 
 searchtags:	fastaReader.o	trie.o searchtags.o gzstream/gzstream.o
 	${CXX} -o $@ $^ $(LDLIBS) $(LDFLAGS)
+	mv -f searchtags.exe searchtags
 
 clean:
 	rm -f  trieTag allTag searchtags *.o
