@@ -371,31 +371,31 @@ if ( (-e $outdir.$refseqFN.".".$restSequence.".l".$length.".mm0.out.gz") &&
   my $cmd="src/allTag  -l ".$length." -m 1 -r ".$restSequence." -d $refseq  -o ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm0.out.gz    -p1  ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm1.outA.gz   -p2  ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm1.outC.gz   -p3  ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm1.outG.gz   -p4  ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm1.outT.gz";
   systemBash($cmd);
 
-  $cmd="zcat ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm0.out.gz | sort --temporary-directory=".$outdir." -t \$'\\t' -k3,3 - | gzip > ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm0.out.sort.gz";
+  $cmd="gzip -d -c  ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm0.out.gz | sort --temporary-directory=".$outdir." -t \$'\\t' -k3,3 - | gzip > ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm0.out.sort.gz";
   systemBash($cmd);
   $cmd="/bin/mv -f  ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm0.out.sort.gz ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm0.out.gz";
   systemBash($cmd);
 
 
-  $cmd="zcat ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm1.outA.gz | sort --temporary-directory=".$outdir." -t \$'\\t' -k3,3 - | gzip > ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm1.outA.sort.gz";
+  $cmd="gzip -d -c  ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm1.outA.gz | sort --temporary-directory=".$outdir." -t \$'\\t' -k3,3 - | gzip > ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm1.outA.sort.gz";
   systemBash($cmd);
   $cmd="/bin/mv -f  ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm1.outA.sort.gz ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm1.outA.gz";
   systemBash($cmd);
 
 
-  $cmd="zcat ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm1.outC.gz | sort --temporary-directory=".$outdir." -t \$'\\t' -k3,3 - | gzip > ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm1.outC.sort.gz";
+  $cmd="gzip -d -c  ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm1.outC.gz | sort --temporary-directory=".$outdir." -t \$'\\t' -k3,3 - | gzip > ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm1.outC.sort.gz";
   systemBash($cmd);
   $cmd="/bin/mv -f  ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm1.outC.sort.gz ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm1.outC.gz";
   systemBash($cmd);
 
 
-  $cmd="zcat ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm1.outG.gz | sort --temporary-directory=".$outdir." -t \$'\\t' -k3,3 - | gzip > ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm1.outG.sort.gz";
+  $cmd="gzip -d -c  ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm1.outG.gz | sort --temporary-directory=".$outdir." -t \$'\\t' -k3,3 - | gzip > ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm1.outG.sort.gz";
   systemBash($cmd);
   $cmd="/bin/mv -f  ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm1.outG.sort.gz ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm1.outG.gz";
   systemBash($cmd);
 
 
-  $cmd="zcat ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm1.outT.gz | sort --temporary-directory=".$outdir." -t \$'\\t' -k3,3 - | gzip > ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm1.outT.sort.gz";
+  $cmd="gzip -d -c  ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm1.outT.gz | sort --temporary-directory=".$outdir." -t \$'\\t' -k3,3 - | gzip > ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm1.outT.sort.gz";
   systemBash($cmd);
   $cmd="/bin/mv -f  ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm1.outT.sort.gz ".$outdir.$refseqFN.".".$restSequence.".l".$length.".mm1.outT.gz";
   systemBash($cmd);
@@ -436,31 +436,31 @@ if ( (-e $outdir.$unigeneFN.".".$restSequence.".l".$length.".mm0.out.gz") &&
   systemBash($cmd);
 
 
-  $cmd="zcat ".$outdir.$unigeneFN.".".$restSequence.".l".$length.".mm0.out.gz | sort --temporary-directory=".$outdir." -t \$'\\t' -k3,3 - | gzip > ".$outdir.$unigeneFN.".".$restSequence.".l".$length.".mm0.out.sort.gz";
+  $cmd="gzip -d -c  ".$outdir.$unigeneFN.".".$restSequence.".l".$length.".mm0.out.gz | sort --temporary-directory=".$outdir." -t \$'\\t' -k3,3 - | gzip > ".$outdir.$unigeneFN.".".$restSequence.".l".$length.".mm0.out.sort.gz";
   systemBash($cmd);
   $cmd="/bin/mv -f  ".$outdir.$unigeneFN.".".$restSequence.".l".$length.".mm0.out.sort.gz ".$outdir.$unigeneFN.".".$restSequence.".l".$length.".mm0.out.gz";
   systemBash($cmd);
 
 
-  $cmd="zcat ".$outdir.$unigeneFN.".".$restSequence.".l".$length.".mm1.outA.gz | sort --temporary-directory=".$outdir." -t \$'\\t' -k3,3 - | gzip > ".$outdir.$unigeneFN.".".$restSequence.".l".$length.".mm1.outA.sort.gz";
+  $cmd="gzip -d -c  ".$outdir.$unigeneFN.".".$restSequence.".l".$length.".mm1.outA.gz | sort --temporary-directory=".$outdir." -t \$'\\t' -k3,3 - | gzip > ".$outdir.$unigeneFN.".".$restSequence.".l".$length.".mm1.outA.sort.gz";
   systemBash($cmd);
   $cmd="/bin/mv -f  ".$outdir.$unigeneFN.".".$restSequence.".l".$length.".mm1.outA.sort.gz ".$outdir.$unigeneFN.".".$restSequence.".l".$length.".mm1.outA.gz";
   systemBash($cmd);
 
 
-  $cmd="zcat ".$outdir.$unigeneFN.".".$restSequence.".l".$length.".mm1.outC.gz | sort --temporary-directory=".$outdir." -t \$'\\t' -k3,3 - | gzip > ".$outdir.$unigeneFN.".".$restSequence.".l".$length.".mm1.outC.sort.gz";
+  $cmd="gzip -d -c  ".$outdir.$unigeneFN.".".$restSequence.".l".$length.".mm1.outC.gz | sort --temporary-directory=".$outdir." -t \$'\\t' -k3,3 - | gzip > ".$outdir.$unigeneFN.".".$restSequence.".l".$length.".mm1.outC.sort.gz";
   systemBash($cmd);
   $cmd="/bin/mv -f  ".$outdir.$unigeneFN.".".$restSequence.".l".$length.".mm1.outC.sort.gz ".$outdir.$unigeneFN.".".$restSequence.".l".$length.".mm1.outC.gz";
   systemBash($cmd);
 
 
-  $cmd="zcat ".$outdir.$unigeneFN.".".$restSequence.".l".$length.".mm1.outG.gz | sort --temporary-directory=".$outdir." -t \$'\\t' -k3,3 - | gzip > ".$outdir.$unigeneFN.".".$restSequence.".l".$length.".mm1.outG.sort.gz";
+  $cmd="gzip -d -c  ".$outdir.$unigeneFN.".".$restSequence.".l".$length.".mm1.outG.gz | sort --temporary-directory=".$outdir." -t \$'\\t' -k3,3 - | gzip > ".$outdir.$unigeneFN.".".$restSequence.".l".$length.".mm1.outG.sort.gz";
   systemBash($cmd);
   $cmd="/bin/mv -f  ".$outdir.$unigeneFN.".".$restSequence.".l".$length.".mm1.outG.sort.gz ".$outdir.$unigeneFN.".".$restSequence.".l".$length.".mm1.outG.gz";
   systemBash($cmd);
 
 
-  $cmd="zcat ".$outdir.$unigeneFN.".".$restSequence.".l".$length.".mm1.outT.gz | sort --temporary-directory=".$outdir." -t \$'\\t' -k3,3 - | gzip > ".$outdir.$unigeneFN.".".$restSequence.".l".$length.".mm1.outT.sort.gz";
+  $cmd="gzip -d -c  ".$outdir.$unigeneFN.".".$restSequence.".l".$length.".mm1.outT.gz | sort --temporary-directory=".$outdir." -t \$'\\t' -k3,3 - | gzip > ".$outdir.$unigeneFN.".".$restSequence.".l".$length.".mm1.outT.sort.gz";
   systemBash($cmd);
   $cmd="/bin/mv -f  ".$outdir.$unigeneFN.".".$restSequence.".l".$length.".mm1.outT.sort.gz ".$outdir.$unigeneFN.".".$restSequence.".l".$length.".mm1.outT.gz";
   systemBash($cmd);
@@ -495,31 +495,31 @@ if ( (-e $outdir.$genomicFN.".".$restSequence.".l".$length.".mm0.out.gz") &&
 
 
 
-  $cmd="zcat ".$outdir.$genomicFN.".".$restSequence.".l".$length.".mm0.out.gz | sort --temporary-directory=".$outdir." -t \$'\\t' -k3,3 - | gzip > ".$outdir.$genomicFN.".".$restSequence.".l".$length.".mm0.out.sort.gz";
+  $cmd="gzip -d -c  ".$outdir.$genomicFN.".".$restSequence.".l".$length.".mm0.out.gz | sort --temporary-directory=".$outdir." -t \$'\\t' -k3,3 - | gzip > ".$outdir.$genomicFN.".".$restSequence.".l".$length.".mm0.out.sort.gz";
   systemBash($cmd);
   $cmd="/bin/mv -f  ".$outdir.$genomicFN.".".$restSequence.".l".$length.".mm0.out.sort.gz ".$outdir.$genomicFN.".".$restSequence.".l".$length.".mm0.out.gz";
   systemBash($cmd);
 
 
-  $cmd="zcat ".$outdir.$genomicFN.".".$restSequence.".l".$length.".mm1.outA.gz | sort --temporary-directory=".$outdir." -t \$'\\t' -k3,3 - | gzip > ".$outdir.$genomicFN.".".$restSequence.".l".$length.".mm1.outA.sort.gz";
+  $cmd="gzip -d -c  ".$outdir.$genomicFN.".".$restSequence.".l".$length.".mm1.outA.gz | sort --temporary-directory=".$outdir." -t \$'\\t' -k3,3 - | gzip > ".$outdir.$genomicFN.".".$restSequence.".l".$length.".mm1.outA.sort.gz";
   systemBash($cmd);
   $cmd="/bin/mv -f  ".$outdir.$genomicFN.".".$restSequence.".l".$length.".mm1.outA.sort.gz ".$outdir.$genomicFN.".".$restSequence.".l".$length.".mm1.outA.gz";
   systemBash($cmd);
 
 
-  $cmd="zcat ".$outdir.$genomicFN.".".$restSequence.".l".$length.".mm1.outC.gz | sort --temporary-directory=".$outdir." -t \$'\\t' -k3,3 - | gzip > ".$outdir.$genomicFN.".".$restSequence.".l".$length.".mm1.outC.sort.gz";
+  $cmd="gzip -d -c  ".$outdir.$genomicFN.".".$restSequence.".l".$length.".mm1.outC.gz | sort --temporary-directory=".$outdir." -t \$'\\t' -k3,3 - | gzip > ".$outdir.$genomicFN.".".$restSequence.".l".$length.".mm1.outC.sort.gz";
   systemBash($cmd);
   $cmd="/bin/mv -f  ".$outdir.$genomicFN.".".$restSequence.".l".$length.".mm1.outC.sort.gz ".$outdir.$genomicFN.".".$restSequence.".l".$length.".mm1.outC.gz";
   systemBash($cmd);
 
 
-  $cmd="zcat ".$outdir.$genomicFN.".".$restSequence.".l".$length.".mm1.outG.gz | sort --temporary-directory=".$outdir." -t \$'\\t' -k3,3 - | gzip > ".$outdir.$genomicFN.".".$restSequence.".l".$length.".mm1.outG.sort.gz";
+  $cmd="gzip -d -c  ".$outdir.$genomicFN.".".$restSequence.".l".$length.".mm1.outG.gz | sort --temporary-directory=".$outdir." -t \$'\\t' -k3,3 - | gzip > ".$outdir.$genomicFN.".".$restSequence.".l".$length.".mm1.outG.sort.gz";
   systemBash($cmd);
   $cmd="/bin/mv -f  ".$outdir.$genomicFN.".".$restSequence.".l".$length.".mm1.outG.sort.gz ".$outdir.$genomicFN.".".$restSequence.".l".$length.".mm1.outG.gz";
   systemBash($cmd);
 
 
-  $cmd="zcat ".$outdir.$genomicFN.".".$restSequence.".l".$length.".mm1.outT.gz | sort --temporary-directory=".$outdir." -t \$'\\t' -k3,3 - | gzip > ".$outdir.$genomicFN.".".$restSequence.".l".$length.".mm1.outT.sort.gz";
+  $cmd="gzip -d -c  ".$outdir.$genomicFN.".".$restSequence.".l".$length.".mm1.outT.gz | sort --temporary-directory=".$outdir." -t \$'\\t' -k3,3 - | gzip > ".$outdir.$genomicFN.".".$restSequence.".l".$length.".mm1.outT.sort.gz";
   systemBash($cmd);
   $cmd="/bin/mv -f  ".$outdir.$genomicFN.".".$restSequence.".l".$length.".mm1.outT.sort.gz ".$outdir.$genomicFN.".".$restSequence.".l".$length.".mm1.outT.gz";
   systemBash($cmd);
