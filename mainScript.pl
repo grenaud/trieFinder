@@ -119,7 +119,9 @@ sub poll{
      #print $proc;
      #print "#".$fields[1]."#\n";
      if($fields[1] eq $proc){
-       if($fields[$#fields] ne "<defunct>"){ #check for zombie
+       if($fields[$#fields] !~ /^\(.*\)$/ &&
+	  $fields[$#fields] ne "<defunct>"){ #check for zombie
+	 #if($fields[$#fields] ne "<defunct>"){ #check for zombie
 	 #print "found ";
 	 $found=1;
        }
