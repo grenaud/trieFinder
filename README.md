@@ -1,8 +1,7 @@
 trieFinder
 ==========
 
-
-trieFinder is a software suite for the automatic alignment of tags stemming from Massively Parallel Signature Sequencing (MPSS) to preannotated databases of putative sequence tags from both the genome and transcriptome ( Refseq and Unigene ).
+The trieFinder program is designed to rapidly map Digital Gene Expression (DGE) tags of various lengths to RefSeq, UniGene, and/or genomic sequences. It annotates the tags with information from the sequence files, providing output in a format that is amenable to both transcript quantification and the detection of novel transcripts.
 
 
 See the readme.pdf for installation, running and miscellaneous documentation.
